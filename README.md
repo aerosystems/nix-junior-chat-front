@@ -6,4 +6,22 @@
 
 About most popular command read here - **_make help_**
 
-📌All environment variables(**_.env.dev_** file with passwords & API keys) are intentionally left in the root directory for easy application startup.
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
