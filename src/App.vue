@@ -1,4 +1,5 @@
 <template>
+  
   <form @submit.prevent="submitForm">
     <div>
       <label for="username">Username:</label>
@@ -10,9 +11,11 @@
     </div>
     <button type="submit">Login</button>
   </form>
+  
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -23,6 +26,18 @@ export default {
   methods: {
     submitForm() {
       // Отримання токенів з сервера тут
+      console.log(this.username, this.password)
+      
+      axios.post('http://localhost:80/v1/user/login', {
+                    email: this.username,
+                    password: this.password
+                })
+                .then(function (response) {
+                    console.log(response.data.response)
+                })
+                .catch(function (error) {
+                    console.log(error.response.data)
+                });          
     }
   }
 }
