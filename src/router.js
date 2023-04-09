@@ -1,35 +1,29 @@
 import { createWebHistory, createRouter } from "vue-router";
-import Home from "./components/HomePage.vue";
+import Chat from "./components/ChatPage.vue";
 import Login from "./components/LoginForm.vue";
-import Register from "./components/RegisterForm.vue";
-// lazy-loaded
-function Profile() {
-    return import("./components/ChatPage.vue");
-}
+import SignUp from "./components/SignUpForm.vue";
+import LogoutPage from "./components/LogoutPage.vue";
 
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: Home,
-  },
-  {
-    path: "/home",
-    component: Home,
+    component: Login,
   },
   {
     path: "/login",
     component: Login,
   },
   {
-    path: "/register",
-    component: Register,
+    path: "/signup",
+    component: SignUp,
   },
   {
-    path: "/profile",
-    name: "profile",
-    // lazy-loaded
-    component: Profile,
+    path: "/logout",
+    component: LogoutPage,
+  },
+  {
+    path: "/chat",
+    component: Chat,
   }
 ];
 
@@ -37,5 +31,19 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+// router.beforeEach((to, from, next) => {
+//   const publicPages = ['/login', '/signup', '/'];
+//   const authRequired = !publicPages.includes(to.path);
+//   const loggedIn = localStorage.getItem('user');
+
+//   // trying to access a restricted page + not logged in
+//   // redirect to login page
+//   if (authRequired && !loggedIn) {
+//     next('/login');
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;
