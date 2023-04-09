@@ -1,44 +1,19 @@
 <template>
-  
-  <form @submit.prevent="submitForm">
-    <div>
-      <label for="username">Username:</label>
-      <input type="text" id="username" v-model="username" required>
+  <div id="app">
+    <div class="container">
+      <router-view />
     </div>
-    <div>
-      <label for="password">Password:</label>
-      <input type="password" id="password" v-model="password" required>
-    </div>
-    <button type="submit">Login</button>
-  </form>
-  
+  </div>
 </template>
 
 <script>
-import axios from 'axios'
 export default {
-  data() {
-    return {
-      username: '',
-      password: ''
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
     }
   },
-  methods: {
-    submitForm() {
-      // Отримання токенів з сервера тут
-      console.log(this.username, this.password)
-      
-      axios.post('http://localhost:80/v1/user/login', {
-                    email: this.username,
-                    password: this.password
-                })
-                .then(function (response) {
-                    console.log(response.data.response)
-                })
-                .catch(function (error) {
-                    console.log(error.response.data)
-                });          
-    }
-  }
-}
+};
 </script>
+
+<style></style>
