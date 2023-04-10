@@ -58,6 +58,14 @@
               </li>
             </ul>
           </div>
+          <div class="bar">
+            <div class="col-lg-12 hidden-sm text-center">
+              <button href="javascript:void(0);" class="btn btn-outline-primary"><font-awesome-icon icon="user-friends" /></button>
+              <button href="javascript:void(0);" class="btn btn-outline-secondary"><font-awesome-icon icon="ban" /></button>
+              <button href="javascript:void(0);" class="btn btn-outline-info"><font-awesome-icon icon="user-gear" /></button>
+              <button @click="handleLogout" class="btn btn-outline-warning"><font-awesome-icon icon="sign-out-alt" /></button>
+            </div>
+          </div>
           <div class="chat">
             <div class="chat-header clearfix">
               <div class="row">
@@ -70,12 +78,7 @@
                     <small>Last seen: 2 hours ago</small>
                   </div>
                 </div>
-                <div class="col-lg-6 hidden-sm text-right">
-                  <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
-                  <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
-                  <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
-                  <a href="javascript:void(0);" class="btn btn-outline-warning"><i class="fa fa-question"></i></a>
-                </div>
+
               </div>
             </div>
             <div class="chat-history">
@@ -140,6 +143,11 @@ export default {
       imageObjects
     };
   },
+  methods: {
+    handleLogout() {
+      this.$store.dispatch('auth/logout');
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -169,6 +177,20 @@ body {
   width: 100%;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
 }
+
+.bar {
+  width: 280px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 20px;
+  z-index: 7;
+}
+
+.bar .btn {
+  margin: 0 4px;
+}
+
 
 .chat-app .people-list {
   width: 280px;
