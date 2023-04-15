@@ -1,37 +1,40 @@
-import axios from 'axios';
-import authHeader from './auth.header';
-import router from "../router";
-
-const API_URL = 'http://localhost:80/v1/';
+import api from "./api";
+import TokenService from "./token.service";
 
 class AuthService {
-    async login(user) {
-        const response = await axios
-            .post(API_URL + 'user/login', {
-                username: user.username,
-                password: user.password
+    login({username, password}) {
+        return api
+            .post("/v1/user/login", {
+                username,
+                password
+            })
+            .then((response) => {
+                if (response.data.data.accessToken) {
+                    TokenService.setUser(response.data.data);
+                }
+
+                return response.data.data;
             });
-        if (response.data.data.access_token) {
-            localStorage.setItem('user', JSON.stringify(response.data.data));
-        }
-        return response.data;
     }
 
     logout() {
-        axios.post(API_URL + 'user/logout', {}, {
-                headers: authHeader()
-            }).then(response => {
-                if (response.status === 202) {
-                    localStorage.removeItem('user');
-                    router.push('/login');
-                }
-            });
+        api.post("/v1/user/logout", {}, {
+            headers: {
+                Authorization: 'Bearer ' + TokenService.getLocalAccessToken()
+            }
+        }).then((response) => {
+            if (response.status === 200) {
+                TokenService.removeUser();
+                this.$router.push('/login');
+            }
+        });
     }
 
-    register(user) {
-        return axios.post(API_URL + 'user/register', {
-            username: user.username,
-            password: user.password
+    register({username, email, password}) {
+        return api.post("/v1/user/register", {
+            username,
+            email,
+            password
         });
     }
 }
