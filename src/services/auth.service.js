@@ -1,29 +1,43 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:80/v1/';
+import api from "./api";
+import TokenService from "./token.service";
 
 class AuthService {
-    async login(user) {
-        const response = await axios
-            .post(API_URL + 'user/login', {
-                username: user.username,
-                password: user.password
+    login({username, password}) {
+        return api
+            .post("/v1/user/login", {
+                username,
+                password
+            })
+            .then((response) => {
+                if (response.data.data.accessToken) {
+                    TokenService.setUser(response.data.data);
+                }
+                return response.data.data;
             });
-        if (response.data.data.access_token) {
-            localStorage.setItem('user', JSON.stringify(response.data.data.access_token));
-        }
-        return response.data;
     }
 
     logout() {
-        localStorage.removeItem('user');
+        return api
+            .post("/v1/user/logout", {}, {
+                headers: {
+                    Authorization: 'Bearer ' + TokenService.getLocalAccessToken()
+                }
+            })
+            .then(
+                function (response) {
+                    TokenService.removeUser();
+                    return response.data.data;
+                }
+            );
     }
 
-    register(user) {
-        return axios.post(API_URL + 'user/register', {
-            username: user.username,
-            password: user.password
-        });
+    register({username, email, password}) {
+        return api
+            .post("/v1/user/register", {
+                username,
+                email,
+                password
+            });
     }
 }
 

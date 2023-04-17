@@ -1,35 +1,26 @@
-import { createWebHistory, createRouter } from "vue-router";
-import Chat from "./components/ChatPage.vue";
-import Login from "./components/LoginForm.vue";
-import SignUp from "./components/SignUpForm.vue";
-import LogoutPage from "./components/LogoutPage.vue";
+import {createWebHistory, createRouter} from "vue-router";
+import ChatPage from "./components/ChatPage.vue";
+import LoginForm from "./components/LoginForm.vue";
+import SignUpForm from "./components/SignUpForm.vue";
 
 const routes = [
-  {
-    path: "/",
-    component: Login,
-  },
-  {
-    path: "/login",
-    component: Login,
-  },
-  {
-    path: "/signup",
-    component: SignUp,
-  },
-  {
-    path: "/logout",
-    component: LogoutPage,
-  },
-  {
-    path: "/chat",
-    component: Chat,
-  }
+    {
+        path: "/",
+        component: ChatPage,
+    },
+    {
+        path: "/login",
+        component: LoginForm,
+    },
+    {
+        path: "/signup",
+        component: SignUpForm,
+    }
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+    history: createWebHistory(),
+    routes,
 });
 
 // router.beforeEach((to, from, next) => {

@@ -10,7 +10,6 @@ export const auth = {
         login({ commit }, user) {
             return AuthService.login(user).then(
                 function (user) {
-                    console.log('!!!!', user);
                     commit('loginSuccess', user);
                     return Promise.resolve(user);
                 },
@@ -21,8 +20,16 @@ export const auth = {
             );
         },
         logout({ commit }) {
-            AuthService.logout();
-            commit('logout');
+            return AuthService.logout().then(
+                function (response) {
+                    commit('logout');
+                    return Promise.resolve(response.data);
+                },
+                function (error) {
+                    commit('logout');
+                    return Promise.reject(error);
+                }
+            );
         },
         register({ commit }, user) {
             return AuthService.register(user).then(
@@ -35,6 +42,9 @@ export const auth = {
                     return Promise.reject(error);
                 }
             );
+        },
+        updateTokens({ commit }, accessToken, refreshToken) {
+            commit('updateTokens', accessToken, refreshToken);
         }
     },
     mutations: {
@@ -55,6 +65,10 @@ export const auth = {
         },
         registerFailure(state) {
             state.status.loggedIn = false;
+        },
+        updateTokens(state, accessToken, refreshToken) {
+            state.status.loggedIn = true;
+            state.user = { ...state.user, accessToken: accessToken, refreshToken: refreshToken };
         }
     }
 };
