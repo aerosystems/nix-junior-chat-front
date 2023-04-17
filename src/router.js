@@ -2,7 +2,6 @@ import {createWebHistory, createRouter} from "vue-router";
 import ChatPage from "./components/ChatPage.vue";
 import LoginForm from "./components/LoginForm.vue";
 import SignUpForm from "./components/SignUpForm.vue";
-import LogoutPage from "./components/LogoutPage.vue";
 
 const routes = [
     {
@@ -16,14 +15,6 @@ const routes = [
     {
         path: "/signup",
         component: SignUpForm,
-    },
-    {
-        path: "/logout",
-        component: LogoutPage,
-    },
-    {
-        path: "/chat",
-        component: ChatPage,
     }
 ];
 

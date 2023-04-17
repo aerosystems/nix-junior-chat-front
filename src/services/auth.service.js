@@ -12,30 +12,32 @@ class AuthService {
                 if (response.data.data.accessToken) {
                     TokenService.setUser(response.data.data);
                 }
-
                 return response.data.data;
             });
     }
 
     logout() {
-        api.post("/v1/user/logout", {}, {
-            headers: {
-                Authorization: 'Bearer ' + TokenService.getLocalAccessToken()
-            }
-        }).then((response) => {
-            if (response.status === 200) {
-                TokenService.removeUser();
-                this.$router.push('/login');
-            }
-        });
+        return api
+            .post("/v1/user/logout", {}, {
+                headers: {
+                    Authorization: 'Bearer ' + TokenService.getLocalAccessToken()
+                }
+            })
+            .then(
+                function (response) {
+                    TokenService.removeUser();
+                    return response.data.data;
+                }
+            );
     }
 
     register({username, email, password}) {
-        return api.post("/v1/user/register", {
-            username,
-            email,
-            password
-        });
+        return api
+            .post("/v1/user/register", {
+                username,
+                email,
+                password
+            });
     }
 }
 

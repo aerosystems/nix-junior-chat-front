@@ -154,7 +154,8 @@ export default {
     name: 'ChatPage',
     methods: {
         handleLogout() {
-            this.$store.dispatch('auth/logout');
+            EventBus.dispatch("logout");
+            this.$router.push('/login');
         }
     },
     data() {
@@ -165,18 +166,18 @@ export default {
     mounted() {
         UserService.getUser().then(
             response => {
-                response.data.forEach(user => {
-                    console.log(user)
-                });
+                console.log(response.data.data.followedUsers)
             },
             error => {
+                console.log(error);
                 this.content =
                     (error.response && error.response.data && error.response.data.message) ||
                     error.message ||
                     error.toString();
 
-                if (error.response && error.response.status === 403) {
+                if (error.response && error.response.status === 401) {
                     EventBus.dispatch("logout");
+                    this.$router.push('/login');
                 }
             }
         );

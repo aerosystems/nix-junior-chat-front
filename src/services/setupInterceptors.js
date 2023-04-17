@@ -29,18 +29,14 @@ const setup = (store) => {
 
                     try {
                         const rs = await axiosInstance.post("/v1/tokens/refresh", {
-                                refreshToken: TokenService.getLocalRefreshToken(),
-                            }, {
-                                headers: {
-                                    Authorization: 'Bearer ' + TokenService.getLocalAccessToken()
-                                }
-                            }
-                        );
+                            refreshToken: TokenService.getLocalRefreshToken(),
+                        }, {});
 
-                        const {accessToken} = rs.data;
+                        const {accessToken, refreshToken} = rs.data.data;
 
-                        store.dispatch('v1/tokens/refresh', accessToken);
+                        store.dispatch('auth/updateTokens', accessToken, refreshToken);
                         TokenService.updateLocalAccessToken(accessToken);
+                        TokenService.updateLocalRefreshToken(refreshToken);
 
                         return axiosInstance(originalConfig);
                     } catch (_error) {
