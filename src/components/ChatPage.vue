@@ -14,46 +14,15 @@
                             <input type="text" class="form-control" placeholder="Search...">
                         </div>
                         <ul class="list-unstyled chat-list mt-2 mb-0">
-                            <li class="clearfix">
-                                <img src="/img/avatar1.b38ebce1.png" alt="avatar">
-                                <div class="about">
-                                    <div class="name">Vincent Porter</div>
-                                    <div class="status"><i class="fa fa-circle offline"></i> left 7 mins ago</div>
-                                </div>
-                            </li>
-                            <li class="clearfix active">
-                                <img src="/img/avatar2.f68508f2.png" alt="avatar">
-                                <div class="about">
-                                    <div class="name">Aiden Chavez</div>
-                                    <div class="status"><i class="fa fa-circle online"></i> online</div>
-                                </div>
-                            </li>
-                            <li class="clearfix">
-                                <img src="/img/avatar3.3e7b9d95.png" alt="avatar">
-                                <div class="about">
-                                    <div class="name">Mike Thomas</div>
-                                    <div class="status"><i class="fa fa-circle online"></i> online</div>
-                                </div>
-                            </li>
-                            <li class="clearfix">
-                                <img src="/img/avatar4.5019b3ab.png" alt="avatar">
-                                <div class="about">
-                                    <div class="name">Christian Kelly</div>
-                                    <div class="status"><i class="fa fa-circle offline"></i> left 10 hours ago</div>
-                                </div>
-                            </li>
-                            <li class="clearfix">
-                                <img src="/img/avatar5.af0d4850.png" alt="avatar">
-                                <div class="about">
-                                    <div class="name">Monica Ward</div>
-                                    <div class="status"><i class="fa fa-circle online"></i> online</div>
-                                </div>
-                            </li>
-                            <li class="clearfix">
-                                <img src="/img/avatar7.62f5d021.png" alt="avatar">
-                                <div class="about">
-                                    <div class="name">Dean Henry</div>
-                                    <div class="status"><i class="fa fa-circle offline"></i> offline since Oct 28</div>
+                            <li v-for="friend in friends" :key="friend.id">
+                                <div class="clearfix">
+                                    <img :src="'http://localhost/images/'+friend.image" alt="avatar">
+                                    <div class="about">
+                                        <div class="name">{{ friend.username }}</div>
+                                        <div class="status">
+                                            <i class="fa fa-circle offline"></i> online
+                                        </div>
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -136,20 +105,6 @@
 import UserService from '../services/user.service';
 import EventBus from "../common/EventBus";
 
-// Отримуємо всі шляхи до зображень у директорії assets/images
-const images = require.context('@/assets/images', false, /\.png$/);
-
-// Отримуємо список шляхів до зображень
-const imagePaths = images.keys();
-
-// Отримуємо список об'єктів з зображеннями і їх шляхами
-const imageObjects = imagePaths.map(path => {
-    return {
-        path: path,
-        src: images(path)
-    };
-});
-
 export default {
     name: 'ChatPage',
     methods: {
@@ -160,13 +115,16 @@ export default {
     },
     data() {
         return {
-            imageObjects
+            user: {},
+            friends: [],
         };
     },
     mounted() {
         UserService.getUser().then(
             response => {
-                console.log(response.data.data.followedUsers)
+                console.log(response.data.data.followedUsers);
+                this.user = response.data.data;
+                this.friends = response.data.data.followedUsers;
             },
             error => {
                 console.log(error);
@@ -175,7 +133,7 @@ export default {
                     error.message ||
                     error.toString();
 
-                if (error.response && error.response.status === 401) {
+                if (error.response && error.response.status !== 200) {
                     EventBus.dispatch("logout");
                     this.$router.push('/login');
                 }
