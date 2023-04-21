@@ -11,14 +11,15 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-search"></i></span>
                             </div>
-                            <input type="text" class="form-control" placeholder="Search...">
+                            <input v-model="searchQuery" @input="checkInputValue" @click="showSearch = !showSearch" type="text" class="form-control" placeholder="Search...">
                         </div>
-                        <ul class="list-unstyled chat-list mt-2 mb-0">
-                            <li v-for="friend in friends" :key="friend.id">
+                        <!-- Search -->
+                        <ul v-if="showSearch" class="list-unstyled chat-list mt-2 mb-0">
+                            <li v-for="foundUser in foundUsers" :key="foundUser.id">
                                 <div class="clearfix">
-                                    <img :src="'http://localhost/images/'+friend.image" alt="avatar">
+                                    <img :src="foundUser.image" alt="avatar">
                                     <div class="about">
-                                        <div class="name">{{ friend.username }}</div>
+                                        <div class="name">{{ foundUser.username }}</div>
                                         <div class="status">
                                             <i class="fa fa-circle offline"></i> online
                                         </div>
@@ -26,20 +27,39 @@
                                 </div>
                             </li>
                         </ul>
+                        <!-- Friends -->
+                        <ul v-if="showFriends" class="list-unstyled chat-list mt-2 mb-0">
+                            <li v-for="friend in friends" :key="friend.id">
+                                <div class="clearfix">
+                                    <img :src="friend.image" alt="avatar">
+                                    <div class="about">
+                                        <div class="name">{{ friend.username }}</div>
+                                        <div class="status">
+                                            <i class="fa fa-circle offline"></i> offline
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <!--Settings-->
+                        <ul v-if="showSettings" class="list-unstyled chat-list mt-2 mb-0">
+                            <li><div class="name">Username</div></li>
+                            <li><div class="name">Password</div></li>
+                            <li><div class="name">Image</div></li>
+                            <li><div class="name">Blacklist</div></li>
+                            <li><div @click="handleLogout" class="name">Logout</div></li>
+                        </ul>
                     </div>
                     <div class="bar">
                         <div class="col-lg-12 hidden-sm text-center">
-                            <button href="javascript:void(0);" class="btn btn-outline-primary">
+                            <button class="btn btn-outline-primary">
+                                <font-awesome-icon icon="message"/>
+                            </button>
+                            <button @click="showFriends = !showFriends" class="btn btn-outline-secondary">
                                 <font-awesome-icon icon="user-friends"/>
                             </button>
-                            <button href="javascript:void(0);" class="btn btn-outline-secondary">
-                                <font-awesome-icon icon="ban"/>
-                            </button>
-                            <button href="javascript:void(0);" class="btn btn-outline-info">
+                            <button @click="showSettings = !showSettings" class="btn btn-outline-secondary">
                                 <font-awesome-icon icon="user-gear"/>
-                            </button>
-                            <button @click="handleLogout" class="btn btn-outline-warning">
-                                <font-awesome-icon icon="sign-out-alt"/>
                             </button>
                         </div>
                     </div>
@@ -111,12 +131,40 @@ export default {
         handleLogout() {
             EventBus.dispatch("logout");
             this.$router.push('/login');
+        },
+        checkInputValue() {
+            if (this.searchQuery.length >= 1) {
+                this.searchUser();
+            } else {
+                this.foundUsers = [];
+            }
+        },
+        searchUser() {
+            UserService.searchUser(this.searchQuery).then(
+                response => {
+                    this.foundUsers = response.data.data;
+                },
+                error => {
+                    console.log(error);
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
         }
     },
     data() {
         return {
             user: {},
             friends: [],
+            foundUsers: [],
+            searchQuery: '',
+            showSearch: false,
+            showChats: true,
+            showFriends: false,
+            showBlacklist: false,
+            showSettings: false,
         };
     },
     mounted() {
