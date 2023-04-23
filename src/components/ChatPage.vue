@@ -72,7 +72,7 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <button @click="unfollow(followedUser.id)" class="btn btn-outline-secondary trash">
+                                            <button @click="unfollowUser(followedUser)" class="btn btn-outline-secondary trash">
                                                 <font-awesome-icon icon="trash"/>
                                             </button>
                                         </div>
@@ -250,8 +250,44 @@ export default {
                 }
             );
         },
+        unfollowUser(user) {
+            UserService.unfollowUser(user.id).then(
+                response => {
+                    console.log(response.data.data);
+                    this.user = response.data.data;
+                    this.followedUsers = response.data.data.followedUsers;
+                    this.blockedUsers = response.data.data.blockedUsers;
+                    this.chats = response.data.data.chats;
+                },
+                error => {
+                    console.log(error);
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
+        },
         blockUser(user) {
             UserService.blockUser(user.id).then(
+                response => {
+                    console.log(response.data.data);
+                    this.user = response.data.data;
+                    this.followedUsers = response.data.data.followedUsers;
+                    this.blockedUsers = response.data.data.blockedUsers;
+                    this.chats = response.data.data.chats;
+                },
+                error => {
+                    console.log(error);
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
+        },
+        unblockUser(user) {
+            UserService.unblockUser(user.id).then(
                 response => {
                     console.log(response.data.data);
                     this.user = response.data.data;
