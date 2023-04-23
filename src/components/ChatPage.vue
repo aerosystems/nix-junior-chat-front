@@ -7,75 +7,125 @@
             <div class="col-lg-12">
                 <div class="card chat-app">
                     <div id="plist" class="people-list">
+                        <!-- Search -->
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-search"></i></span>
                             </div>
-                            <input v-model="searchQuery" @input="checkInputValue" @click="showSearch = !showSearch" type="text" class="form-control" placeholder="Search...">
+                            <input v-model="searchQuery" @input="checkInputValue" @click="clear(); showSearch = true"
+                                   type="text" class="form-control" placeholder="Search...">
                         </div>
-                        <!-- Search -->
-                        <ul v-if="showSearch" class="list-unstyled chat-list mt-2 mb-0">
-                            <li v-for="foundUser in foundUsers" :key="foundUser.id">
-                                <div class="clearfix">
-                                    <img :src="foundUser.image" alt="avatar">
-                                    <div class="about">
-                                        <div class="name">{{ foundUser.username }}</div>
-                                        <div class="status">
-                                            <i class="fa fa-circle offline"></i> online
+                        <div v-if="showSearch">
+                            <div>
+                                <ul class="list-unstyled chat-list mt-2 mb-0">
+                                    <li v-for="foundUser in foundUsers" :key="foundUser.id">
+                                        <div @click="openChat(foundUser)" class="clearfix">
+                                            <img :src="foundUser.image" alt="avatar">
+                                            <div class="about">
+                                                <div class="name">{{ foundUser.username }}</div>
+                                                <div class="status">
+                                                    <i class="fa fa-circle offline"></i> online
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div v-if="searchError !== '' && searchQuery !== ''">
+                                <ul class="list-unstyled chat-list mt-2 mb-0">
+                                    <li>
+                                        <div class="clearfix">
+                                            <div>{{ searchError }}</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Chats -->
+                        <div v-if="showChatList">
+                            <ul class="list-unstyled chat-list mt-2 mb-0">
+                                <li v-for="chat in chats" :key="chat.id">
+                                    <div @click="showChat = !showChat; chatData = chat" class="clearfix">
+                                        <img :src="chat.image" alt="avatar">
+                                        <div class="about">
+                                            <div class="name">{{ chat.username }}</div>
+                                            <div class="status">
+                                                <i class="fa fa-circle offline"></i> offline
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <!-- Friends -->
-                        <ul v-if="showFriends" class="list-unstyled chat-list mt-2 mb-0">
-                            <li v-for="friend in friends" :key="friend.id">
-                                <div class="clearfix">
-                                    <img :src="friend.image" alt="avatar">
-                                    <div class="about">
-                                        <div class="name">{{ friend.username }}</div>
-                                        <div class="status">
-                                            <i class="fa fa-circle offline"></i> offline
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Followed Users -->
+                        <div v-if="showFollowedUsers">
+                            <ul class="list-unstyled chat-list mt-2 mb-0">
+                                <li v-for="followedUser in followedUsers" :key="followedUser.id">
+                                    <div class="clearfix">
+                                        <img :src="followedUser.image" alt="avatar">
+                                        <div class="about">
+                                            <div class="name">{{ followedUser.username }}</div>
+                                            <div class="status">
+                                                <i class="fa fa-circle offline"></i> offline
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                        </ul>
+                                </li>
+                            </ul>
+                        </div>
+
                         <!--Settings-->
-                        <ul v-if="showSettings" class="list-unstyled chat-list mt-2 mb-0">
-                            <li><div class="name">Username</div></li>
-                            <li><div class="name">Password</div></li>
-                            <li><div class="name">Image</div></li>
-                            <li><div class="name">Blacklist</div></li>
-                            <li><div @click="handleLogout" class="name">Logout</div></li>
-                        </ul>
+                        <div v-if="showSettings">
+                            <ul class="list-unstyled chat-list mt-2 mb-0">
+                                <li>
+                                    <div class="name">Username</div>
+                                </li>
+                                <li>
+                                    <div class="name">Password</div>
+                                </li>
+                                <li>
+                                    <div class="name">Image</div>
+                                </li>
+                                <li>
+                                    <div class="name">Blacklist</div>
+                                </li>
+                                <li>
+                                    <div @click="handleLogout" class="name">Logout</div>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
                     <div class="bar">
                         <div class="col-lg-12 hidden-sm text-center">
-                            <button class="btn btn-outline-primary">
+                            <button @click="clear(); showChatList = true" class="btn"
+                                    :class="showChatList ? 'btn-outline-primary' : 'btn-outline-secondary'">
                                 <font-awesome-icon icon="message"/>
                             </button>
-                            <button @click="showFriends = !showFriends" class="btn btn-outline-secondary">
+                            <button @click="clear(); showFollowedUsers = true" class="btn"
+                                    :class="showFollowedUsers ? 'btn-outline-primary' : 'btn-outline-secondary'">
                                 <font-awesome-icon icon="user-friends"/>
                             </button>
-                            <button @click="showSettings = !showSettings" class="btn btn-outline-secondary">
+                            <button @click="clear(); showSettings = true" class="btn"
+                                    :class="showSettings ? 'btn-outline-primary' : 'btn-outline-secondary'">
                                 <font-awesome-icon icon="user-gear"/>
                             </button>
                         </div>
                     </div>
-                    <div class="chat">
+                    <div v-if="showChat" class="chat">
                         <div class="chat-header clearfix">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                                        <img src="/img/avatar8.cd4e98f4.png" alt="avatar">
+                                        <img :src="chatData.image" alt="avatar">
                                     </a>
                                     <div class="chat-about">
-                                        <h6 class="m-b-0">Aiden Chavez</h6>
+                                        <h6 class="m-b-0">{{chatData.username}}</h6>
                                         <small>Last seen: 2 hours ago</small>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         <div class="chat-history">
@@ -83,9 +133,10 @@
                                 <li class="clearfix">
                                     <div class="message-data text-right">
                                         <span class="message-data-time">10:10 AM, Today</span>
-                                        <img src="/img/avatar8.cd4e98f4.png" alt="avatar">
+                                        <img :src="user.image" alt="avatar">
                                     </div>
-                                    <div class="message other-message float-right"> Hi Aiden, how are you? How is the
+                                    <div class="message other-message float-right"> Hi Aiden, how are you? How is
+                                        the
                                         project coming
                                         along?
                                     </div>
@@ -100,7 +151,8 @@
                                     <div class="message-data">
                                         <span class="message-data-time">10:15 AM, Today</span>
                                     </div>
-                                    <div class="message my-message">Project has been already finished and I have results
+                                    <div class="message my-message">Project has been already finished and I have
+                                        results
                                         to show you.
                                     </div>
                                 </li>
@@ -109,9 +161,15 @@
                         <div class="chat-message clearfix">
                             <div class="input-group mb-0">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-send"></i></span>
+                                    <span @click="pushMessage(message)" class="input-group-text"><i class="fa fa-send"></i></span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Enter text here...">
+                                <input
+                                    :value="message"
+                                    @input="message = $event.target.value"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Enter text here..."
+                                >
                             </div>
                         </div>
                     </div>
@@ -143,6 +201,25 @@ export default {
             UserService.searchUser(this.searchQuery).then(
                 response => {
                     this.foundUsers = response.data.data;
+                    this.searchError = "";
+                },
+                error => {
+                    this.searchError = "Users not found"
+                    console.log(error);
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
+        },
+        followUser(user) {
+            UserService.followUser(user.id).then(
+                response => {
+                    console.log(response.data.data);
+                    this.user = response.data.data;
+                    this.followedUsers = response.data.data.followedUsers;
+                    this.chats = response.data.data.chats;
                 },
                 error => {
                     console.log(error);
@@ -152,27 +229,48 @@ export default {
                         error.toString();
                 }
             );
-        }
+        },
+        openChat(user) {
+            this.clear();
+            this.showChat = true;
+            this.showChatList = true;
+            this.chatData = user;
+        },
+        clear() {
+            this.foundUsers = [];
+            this.searchQuery = '';
+            this.showSearch = false;
+            this.searchError = '';
+            this.showChatList = false;
+            this.showFollowedUsers = false;
+            this.showBlacklist = false;
+            this.showSettings = false;
+        },
     },
     data() {
         return {
+            message: '',
             user: {},
-            friends: [],
+            followedUsers: [],
+            chats: [],
             foundUsers: [],
             searchQuery: '',
+            searchError: '',
             showSearch: false,
-            showChats: true,
-            showFriends: false,
+            showChatList: true,
+            showFollowedUsers: false,
             showBlacklist: false,
             showSettings: false,
+            showChat: false,
+            chatData: {},
         };
     },
     mounted() {
         UserService.getUser().then(
             response => {
-                console.log(response.data.data.followedUsers);
                 this.user = response.data.data;
-                this.friends = response.data.data.followedUsers;
+                this.followedUsers = response.data.data.followedUsers;
+                this.chats = response.data.data.chats;
             },
             error => {
                 console.log(error);
@@ -203,6 +301,7 @@ body {
 }
 
 .card {
+    height: 600px;
     background: #fff;
     transition: .5s;
     border: 0;
@@ -225,7 +324,6 @@ body {
 .bar .btn {
     margin: 0 4px;
 }
-
 
 .chat-app .people-list {
     width: 280px;
@@ -304,8 +402,10 @@ body {
 }
 
 .chat .chat-history {
+    overflow: auto;
+    height: 440px;
     padding: 20px;
-    border-bottom: 2px solid #fff
+    border-bottom: 2px solid #fff;
 }
 
 .chat .chat-history ul {
@@ -425,6 +525,10 @@ body {
 }
 
 @media only screen and (max-width: 767px) {
+    .card {
+        height: 465px;
+    }
+
     .chat-app .people-list {
         height: 465px;
         width: 100%;
@@ -453,6 +557,10 @@ body {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 992px) {
+    .card {
+        height: 650px;
+    }
+
     .chat-app .chat-list {
         height: 650px;
         overflow-x: auto
@@ -465,6 +573,10 @@ body {
 }
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+    .card {
+        height: 480px;
+    }
+
     .chat-app .chat-list {
         height: 480px;
         overflow-x: auto
