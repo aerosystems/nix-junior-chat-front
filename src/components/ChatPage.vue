@@ -71,6 +71,11 @@
                                                 <i class="fa fa-circle offline"></i> offline
                                             </div>
                                         </div>
+                                        <div>
+                                            <button @click="unfollow(followedUser.id)" class="btn btn-outline-secondary trash">
+                                                <font-awesome-icon icon="trash"/>
+                                            </button>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>
@@ -122,10 +127,23 @@
                                         <img :src="chatData.image" alt="avatar">
                                     </a>
                                     <div class="chat-about">
-                                        <h6 class="m-b-0">{{chatData.username}}</h6>
+                                        <h6 class="m-b-0">{{ chatData.username }}</h6>
                                         <small>Last seen: 2 hours ago</small>
                                     </div>
                                 </div>
+                                <div v-if="!followedUsers.some(followedUser => followedUser.id === chatData.id)"
+                                     class="col-lg-6 text-right">
+                                    <div>Do you want to add {{ chatData.username }} to Contacts?</div>
+                                    <div>
+                                        <button @click="followUser(chatData)" class="btn btn-outline-primary contact">
+                                            Yes
+                                        </button>
+                                        <button @click="blockUser(chatData)" class="btn btn-outline-secondary contact"
+                                                href="javascript:void(0);">No, block this user
+                                        </button>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="chat-history">
@@ -161,14 +179,15 @@
                         <div class="chat-message clearfix">
                             <div class="input-group mb-0">
                                 <div class="input-group-prepend">
-                                    <span @click="pushMessage(message)" class="input-group-text"><i class="fa fa-send"></i></span>
+                                    <span @click="pushMessage(message)" class="input-group-text"><i
+                                            class="fa fa-send"></i></span>
                                 </div>
                                 <input
-                                    :value="message"
-                                    @input="message = $event.target.value"
-                                    type="text"
-                                    class="form-control"
-                                    placeholder="Enter text here..."
+                                        :value="message"
+                                        @input="message = $event.target.value"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Enter text here..."
                                 >
                             </div>
                         </div>
@@ -219,6 +238,25 @@ export default {
                     console.log(response.data.data);
                     this.user = response.data.data;
                     this.followedUsers = response.data.data.followedUsers;
+                    this.blockedUsers = response.data.data.blockedUsers;
+                    this.chats = response.data.data.chats;
+                },
+                error => {
+                    console.log(error);
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
+        },
+        blockUser(user) {
+            UserService.blockUser(user.id).then(
+                response => {
+                    console.log(response.data.data);
+                    this.user = response.data.data;
+                    this.followedUsers = response.data.data.followedUsers;
+                    this.blockedUsers = response.data.data.blockedUsers;
                     this.chats = response.data.data.chats;
                 },
                 error => {
@@ -252,6 +290,7 @@ export default {
             message: '',
             user: {},
             followedUsers: [],
+            blockedUsers: [],
             chats: [],
             foundUsers: [],
             searchQuery: '',
@@ -295,6 +334,7 @@ export default {
 </script>
 
 <style scoped>
+
 body {
     background-color: #f4f7f6;
     margin-top: 20px;
@@ -385,9 +425,21 @@ body {
     font-size: 13px
 }
 
+.people-list .trash {
+    float: right;
+    line-height: 0.5;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
 .chat .chat-header {
     padding: 15px 20px;
     border-bottom: 2px solid #f4f7f6
+}
+
+.chat .chat-header .contact {
+    line-height: 0.5;
+    margin-left: 5px;
 }
 
 .chat .chat-header img {
