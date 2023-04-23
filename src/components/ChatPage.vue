@@ -12,7 +12,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-search"></i></span>
                             </div>
-                            <input v-model="searchQuery" @input="checkInputValue" @click="clear(); showSearch = true"
+                            <input v-model="searchQuery" @input="checkInputValue" @click="clearLeftBar(); showSearch = true"
                                    type="text" class="form-control" placeholder="Search...">
                         </div>
                         <div v-if="showSearch">
@@ -46,7 +46,7 @@
                         <div v-if="showChatList">
                             <ul class="list-unstyled chat-list mt-2 mb-0">
                                 <li v-for="chat in chats" :key="chat.id">
-                                    <div @click="showChat = !showChat; chatData = chat" class="clearfix">
+                                    <div @click="showChat = !showChat; chatUser = chat" class="clearfix">
                                         <img :src="chat.image" alt="avatar">
                                         <div class="about">
                                             <div class="name">{{ chat.username }}</div>
@@ -72,7 +72,8 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <button @click="unfollowUser(followedUser)" class="btn btn-outline-secondary trash">
+                                            <button @click="unfollowUser(followedUser)"
+                                                    class="btn btn-outline-secondary trash">
                                                 <font-awesome-icon icon="trash"/>
                                             </button>
                                         </div>
@@ -85,16 +86,36 @@
                         <div v-if="showSettings">
                             <ul class="list-unstyled chat-list mt-2 mb-0">
                                 <li>
-                                    <div class="name">Username</div>
+                                    <div class="name row">
+                                        <div class="col-lg-6">Username</div>
+                                        <div class="col-lg-6 text-right">
+                                            <font-awesome-icon icon="angle-right"/>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li>
-                                    <div class="name">Password</div>
+                                    <div class="name row">
+                                        <div class="col-lg-6">Password</div>
+                                        <div class="col-lg-6 text-right">
+                                            <font-awesome-icon icon="angle-right"/>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li>
-                                    <div class="name">Image</div>
+                                    <div class="name row">
+                                        <div class="col-lg-6">Image</div>
+                                        <div class="col-lg-6 text-right">
+                                            <font-awesome-icon icon="angle-right"/>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li>
-                                    <div class="name">Blacklist</div>
+                                    <div @click="clearLeftBar(); showBlockedUsers = true" class="name row">
+                                        <div class="col-lg-6">Blacklist</div>
+                                        <div class="col-lg-6 text-right">
+                                            <font-awesome-icon icon="angle-right"/>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li>
                                     <div @click="handleLogout" class="name">Logout</div>
@@ -102,18 +123,49 @@
                             </ul>
                         </div>
 
+                        <!-- Blocked Users -->
+                        <div v-if="showBlockedUsers">
+                            <ul class="list-unstyled chat-list mt-2 mb-0">
+                                <li>
+                                    <div @click="clearLeftBar(); showSettings = true" class="clearfix row">
+                                        <div class="col-lg-6">
+                                            <font-awesome-icon icon="angle-left" />
+                                        </div>
+                                        <div class="col-lg-6 text-right">Back</div>
+                                    </div>
+                                </li>
+                                <li v-for="blockedUser in blockedUsers" :key="blockedUser.id">
+                                    <div class="clearfix">
+                                        <img :src="blockedUser.image" alt="avatar">
+                                        <div class="about">
+                                            <div class="name">{{ blockedUser.username }}</div>
+                                            <div class="status">
+                                                <i class="fa fa-circle offline"></i> offline
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button @click="unblockUser(blockedUser)"
+                                                    class="btn btn-outline-secondary trash">
+                                                <font-awesome-icon icon="trash"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
                     <div class="bar">
                         <div class="col-lg-12 hidden-sm text-center">
-                            <button @click="clear(); showChatList = true" class="btn"
+                            <button @click="clearLeftBar(); showChatList = true" class="btn"
                                     :class="showChatList ? 'btn-outline-primary' : 'btn-outline-secondary'">
                                 <font-awesome-icon icon="message"/>
                             </button>
-                            <button @click="clear(); showFollowedUsers = true" class="btn"
+                            <button @click="clearLeftBar(); showFollowedUsers = true" class="btn"
                                     :class="showFollowedUsers ? 'btn-outline-primary' : 'btn-outline-secondary'">
                                 <font-awesome-icon icon="user-friends"/>
                             </button>
-                            <button @click="clear(); showSettings = true" class="btn"
+                            <button @click="clearLeftBar(); showSettings = true" class="btn"
                                     :class="showSettings ? 'btn-outline-primary' : 'btn-outline-secondary'">
                                 <font-awesome-icon icon="user-gear"/>
                             </button>
@@ -124,25 +176,40 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                                        <img :src="chatData.image" alt="avatar">
+                                        <img :src="chatUser.image" alt="avatar">
                                     </a>
                                     <div class="chat-about">
-                                        <h6 class="m-b-0">{{ chatData.username }}</h6>
+                                        <h6 class="m-b-0">{{ chatUser.username }}</h6>
                                         <small>Last seen: 2 hours ago</small>
                                     </div>
                                 </div>
-                                <div v-if="!followedUsers.some(followedUser => followedUser.id === chatData.id)"
-                                     class="col-lg-6 text-right">
-                                    <div>Do you want to add {{ chatData.username }} to Contacts?</div>
+
+                                <div v-if="blockedUsers.some(blockedUser => blockedUser.id === chatUser.id)" class="col-lg-6 text-right">
+                                    <div>User is in Blacklist. Do you want to unblock?</div>
                                     <div>
-                                        <button @click="followUser(chatData)" class="btn btn-outline-primary contact">
+                                        <button @click="unblockUser(chatUser)" class="btn btn-outline-primary contact">
                                             Yes
                                         </button>
-                                        <button @click="blockUser(chatData)" class="btn btn-outline-secondary contact"
+                                        <button @click="clearChat()" class="btn btn-outline-secondary contact">
+                                            No, close this chat
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div v-if="!followedUsers.some(followedUser => followedUser.id === chatUser.id) && !blockedUsers.some(blockedUser => blockedUser.id === chatUser.id)"
+                                     class="col-lg-6 text-right">
+                                    <div>Do you want to add user to Contacts?</div>
+                                    <div>
+                                        <button @click="followUser(chatUser)" class="btn btn-outline-primary contact">
+                                            Yes
+                                        </button>
+                                        <button @click="blockUser(chatUser)" class="btn btn-outline-secondary contact"
                                                 href="javascript:void(0);">No, block this user
                                         </button>
                                     </div>
                                 </div>
+
+
 
                             </div>
                         </div>
@@ -305,20 +372,25 @@ export default {
             );
         },
         openChat(user) {
-            this.clear();
+            this.clearLeftBar();
             this.showChat = true;
             this.showChatList = true;
-            this.chatData = user;
+            this.chatUser = user;
         },
-        clear() {
+        clearLeftBar() {
             this.foundUsers = [];
             this.searchQuery = '';
             this.showSearch = false;
             this.searchError = '';
             this.showChatList = false;
             this.showFollowedUsers = false;
+            this.showBlockedUsers = false;
             this.showBlacklist = false;
             this.showSettings = false;
+        },
+        clearChat() {
+            this.showChat = false;
+            this.chatUser = {};
         },
     },
     data() {
@@ -334,10 +406,11 @@ export default {
             showSearch: false,
             showChatList: true,
             showFollowedUsers: false,
+            showBlockedUsers: false,
             showBlacklist: false,
             showSettings: false,
             showChat: false,
-            chatData: {},
+            chatUser: {},
         };
     },
     mounted() {
@@ -345,6 +418,7 @@ export default {
             response => {
                 this.user = response.data.data;
                 this.followedUsers = response.data.data.followedUsers;
+                this.blockedUsers = response.data.data.blockedUsers;
                 this.chats = response.data.data.chats;
             },
             error => {
