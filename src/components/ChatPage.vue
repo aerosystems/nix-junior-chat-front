@@ -12,7 +12,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-search"></i></span>
                             </div>
-                            <input v-model="searchQuery" @input="checkInputValue" @click="clearLeftBar(); showSearch = true"
+                            <input v-model="searchQuery" @input="checkInputValue"
+                                   @click="clearLeftBar(); showSearch = true"
                                    type="text" class="form-control" placeholder="Search...">
                         </div>
                         <div v-if="showSearch">
@@ -63,7 +64,7 @@
                         <div v-if="showFollowedUsers">
                             <ul class="list-unstyled chat-list mt-2 mb-0">
                                 <li v-for="followedUser in followedUsers" :key="followedUser.id">
-                                    <div class="clearfix">
+                                    <div @click="clearChat(); openChat(followedUser)" class="clearfix">
                                         <img :src="followedUser.image" alt="avatar">
                                         <div class="about">
                                             <div class="name">{{ followedUser.username }}</div>
@@ -129,7 +130,7 @@
                                 <li>
                                     <div @click="clearLeftBar(); showSettings = true" class="clearfix row">
                                         <div class="col-lg-6">
-                                            <font-awesome-icon icon="angle-left" />
+                                            <font-awesome-icon icon="angle-left"/>
                                         </div>
                                         <div class="col-lg-6 text-right">Back</div>
                                     </div>
@@ -184,7 +185,8 @@
                                     </div>
                                 </div>
 
-                                <div v-if="blockedUsers.some(blockedUser => blockedUser.id === chatUser.id)" class="col-lg-6 text-right">
+                                <div v-if="blockedUsers.some(blockedUser => blockedUser.id === chatUser.id)"
+                                     class="col-lg-6 text-right">
                                     <div>User is in Blacklist. Do you want to unblock?</div>
                                     <div>
                                         <button @click="unblockUser(chatUser)" class="btn btn-outline-primary contact">
@@ -203,42 +205,27 @@
                                         <button @click="followUser(chatUser)" class="btn btn-outline-primary contact">
                                             Yes
                                         </button>
-                                        <button @click="blockUser(chatUser)" class="btn btn-outline-secondary contact"
-                                                href="javascript:void(0);">No, block this user
+                                        <button @click="blockUser(chatUser)" class="btn btn-outline-secondary contact">
+                                            No, block this user
                                         </button>
                                     </div>
                                 </div>
-
-
-
                             </div>
                         </div>
                         <div class="chat-history">
                             <ul class="m-b-0">
-                                <li class="clearfix">
-                                    <div class="message-data text-right">
-                                        <span class="message-data-time">10:10 AM, Today</span>
-                                        <img :src="user.image" alt="avatar">
+                                <li v-for="(message, index) in messages" :key="index" class="clearfix">
+                                    <div class="message-data"
+                                         :class="message.sender.id === user.id ? 'text-left' : 'text-right'">
+                                        <img v-if="message.sender.id === user.id" :src="message.sender.image"
+                                             alt="avatar">
+                                        <span class="message-data-time">{{ formattedDate(message.date) }}</span>
+                                        <img v-if="message.sender.id !== user.id" :src="message.sender.image"
+                                             alt="avatar">
                                     </div>
-                                    <div class="message other-message float-right"> Hi Aiden, how are you? How is
-                                        the
-                                        project coming
-                                        along?
-                                    </div>
-                                </li>
-                                <li class="clearfix">
-                                    <div class="message-data">
-                                        <span class="message-data-time">10:12 AM, Today</span>
-                                    </div>
-                                    <div class="message my-message">Are we meeting today?</div>
-                                </li>
-                                <li class="clearfix">
-                                    <div class="message-data">
-                                        <span class="message-data-time">10:15 AM, Today</span>
-                                    </div>
-                                    <div class="message my-message">Project has been already finished and I have
-                                        results
-                                        to show you.
+                                    <div class="message"
+                                         :class="message.sender.id === user.id ? 'my-message float-left' : 'other-message float-right'">
+                                        {{ message.content }}
                                     </div>
                                 </li>
                             </ul>
@@ -246,12 +233,13 @@
                         <div class="chat-message clearfix">
                             <div class="input-group mb-0">
                                 <div class="input-group-prepend">
-                                    <span @click="pushMessage(message)" class="input-group-text"><i
+                                    <span @click="pushMessage(message, user, chatUser)" class="input-group-text"><i
                                             class="fa fa-send"></i></span>
                                 </div>
                                 <input
                                         :value="message"
                                         @input="message = $event.target.value"
+                                        @keydown.enter="pushMessage(message, user, chatUser)"
                                         type="text"
                                         class="form-control"
                                         placeholder="Enter text here..."
@@ -272,6 +260,24 @@ import EventBus from "../common/EventBus";
 export default {
     name: 'ChatPage',
     methods: {
+        pushMessage(content, sender, recepiend) {
+            if (content.length > 0) {
+                this.messages.push({
+                    content: content,
+                    sender: sender,
+                    recepiend: recepiend,
+                    date: new Date()
+                });
+                // echo
+                this.messages.push({
+                    content: content,
+                    sender: recepiend,
+                    recepiend: sender,
+                    date: new Date()
+                });
+                this.message = "";
+            }
+        },
         handleLogout() {
             EventBus.dispatch("logout");
             this.$router.push('/login');
@@ -372,10 +378,9 @@ export default {
             );
         },
         openChat(user) {
-            this.clearLeftBar();
             this.showChat = true;
-            this.showChatList = true;
             this.chatUser = user;
+            this.message = '';
         },
         clearLeftBar() {
             this.foundUsers = [];
@@ -392,10 +397,42 @@ export default {
             this.showChat = false;
             this.chatUser = {};
         },
+        formatDate(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            return `${year}-${month}-${day}`;
+        },
+        formattedDate(date) {
+            const now = new Date();
+            const yesterday = new Date(now);
+            yesterday.setDate(now.getDate() - 1);
+            const dateFormatted = this.formatDate(date);
+            const nowFormatted = this.formatDate(now);
+            const yesterdayFormatted = this.formatDate(yesterday);
+
+            let displayDate = '';
+            if (dateFormatted === nowFormatted) {
+                displayDate = 'Today';
+            } else if (dateFormatted === yesterdayFormatted) {
+                displayDate = 'Yesterday';
+            } else {
+                displayDate = date.toLocaleDateString();
+            }
+
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = hours % 12 || 12;
+            const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+            return `${formattedHours}:${formattedMinutes} ${ampm}, ${displayDate}`;
+        },
     },
     data() {
         return {
-            message: '',
+            message: {},
+            messages: [],
             user: {},
             followedUsers: [],
             blockedUsers: [],
@@ -438,7 +475,7 @@ export default {
     computed: {
         currentUser() {
             return this.$store.state.auth.user;
-        }
+        },
     }
 };
 </script>
@@ -641,12 +678,12 @@ body {
 
 .chat .chat-history .other-message {
     background: #e8f1f3;
-    text-align: right
+    text-align: right;
 }
 
 .chat .chat-history .other-message:after {
     border-bottom-color: #e8f1f3;
-    left: 93%
+    left: 80%
 }
 
 .chat .chat-message {
