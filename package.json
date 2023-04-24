@@ -20,6 +20,7 @@
     "vee-validate": "^4.8.4",
     "vue": "^3.2.13",
     "vue-axios": "^3.5.2",
+    "vue-native-websocket": "^2.0.15",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0",
     "yup": "^1.0.2"
