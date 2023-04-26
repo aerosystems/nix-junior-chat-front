@@ -256,10 +256,24 @@
 <script>
 import UserService from '../services/user.service';
 import EventBus from "../common/EventBus";
+import TokenService from '../services/token.service';
+
 
 export default {
     name: 'ChatPage',
     methods: {
+        sendMessage(message) {
+            this.$socket.send(
+                {
+                    message: message,
+                },
+                {
+                    headers: {
+                        Authorization: "Bearer " + TokenService.getLocalAccessToken(),
+                    },
+                }
+            );
+        },
         pushMessage(content, sender, recepiend) {
             if (content.length > 0) {
                 this.messages.push({
@@ -451,6 +465,9 @@ export default {
         };
     },
     mounted() {
+        this.$socket.onmessage = (event) => {
+            console.log(event.data);
+        };
         UserService.getUser().then(
             response => {
                 this.user = response.data.data;
