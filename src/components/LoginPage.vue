@@ -45,7 +45,7 @@ import {Form, Field, ErrorMessage} from "vee-validate";
 import * as yup from "yup";
 
 export default {
-    name: "LoginForm",
+    name: "LoginPage",
     components: {
         Form,
         Field,

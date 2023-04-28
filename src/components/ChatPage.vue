@@ -256,24 +256,10 @@
 <script>
 import UserService from '../services/user.service';
 import EventBus from "../common/EventBus";
-import TokenService from '../services/token.service';
-
 
 export default {
     name: 'ChatPage',
     methods: {
-        sendMessage(message) {
-            this.$socket.send(
-                {
-                    message: message,
-                },
-                {
-                    headers: {
-                        Authorization: "Bearer " + TokenService.getLocalAccessToken(),
-                    },
-                }
-            );
-        },
         pushMessage(content, sender, recepiend) {
             if (content.length > 0) {
                 this.messages.push({
@@ -282,12 +268,9 @@ export default {
                     recepiend: recepiend,
                     date: new Date()
                 });
-                // echo
-                this.messages.push({
-                    content: content,
-                    sender: recepiend,
-                    recepiend: sender,
-                    date: new Date()
+                this.$socket.sendObj({
+                    "content": content,
+                    "recipientId": recepiend.id
                 });
                 this.message = "";
             }
@@ -465,8 +448,24 @@ export default {
         };
     },
     mounted() {
-        this.$socket.onmessage = (event) => {
-            console.log(event.data);
+        this.$options.sockets.onmessage = (data) => {
+            let responseObj = {};
+            responseObj = JSON.parse(data.data);
+
+            if (responseObj.content.length > 0) {
+                let date;
+                date = new Date(responseObj.createdAt * 1000);
+                let sender = {};
+                sender.id = responseObj.senderId;
+                sender.image =
+                this.messages.push({
+                    content: responseObj.content,
+                    sender: responseObj.senderId,
+                    recepiend: responseObj.recepiendId,
+                    date: date,
+                });
+            }
+            console.log(responseObj);
         };
         UserService.getUser().then(
             response => {
