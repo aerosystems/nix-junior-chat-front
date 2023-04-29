@@ -55,25 +55,8 @@
                                                 <i class="fa fa-circle offline"></i> offline
                                             </div>
                                         </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Followed Users -->
-                        <div v-if="showFollowedUsers">
-                            <ul class="list-unstyled chat-list mt-2 mb-0">
-                                <li v-for="followedUser in followedUsers" :key="followedUser.id">
-                                    <div @click="clearChat(); openChat(followedUser)" class="clearfix">
-                                        <img :src="followedUser.image" alt="avatar">
-                                        <div class="about">
-                                            <div class="name">{{ followedUser.username }}</div>
-                                            <div class="status">
-                                                <i class="fa fa-circle offline"></i> offline
-                                            </div>
-                                        </div>
                                         <div>
-                                            <button @click="unfollowUser(followedUser)"
+                                            <button @click="deleteChatUser(chat);"
                                                     class="btn btn-outline-secondary trash">
                                                 <font-awesome-icon icon="trash"/>
                                             </button>
@@ -82,6 +65,9 @@
                                 </li>
                             </ul>
                         </div>
+
+                        <!-- Followed Users -->
+                        <followed-users-list v-if="showFollowedUsers" :followedUsers="followedUsers" />
 
                         <!--Settings-->
                         <div v-if="showSettings">
@@ -237,9 +223,9 @@
                                             class="fa fa-send"></i></span>
                                 </div>
                                 <input
-                                        :value="message"
-                                        @input="message = $event.target.value"
-                                        @keydown.enter="pushMessage(message, user, chatUser)"
+                                        :value="messageText"
+                                        @input="messageText = $event.target.value"
+                                        @keydown.enter="pushMessage(messageText, user, chatUser)"
                                         type="text"
                                         class="form-control"
                                         placeholder="Enter text here..."
@@ -257,8 +243,33 @@
 import UserService from '../services/user.service';
 import EventBus from "../common/EventBus";
 
+import FollowedUsersList from "@/components/FollowedUsersList.vue";
+
 export default {
     name: 'ChatPage',
+    components: {FollowedUsersList},
+    data() {
+        return {
+            messageText: '',
+            message: {},
+            messages: [],
+            user: {},
+            followedUsers: [],
+            blockedUsers: [],
+            chats: [],
+            foundUsers: [],
+            searchQuery: '',
+            searchError: '',
+            showSearch: false,
+            showChatList: true,
+            showFollowedUsers: false,
+            showBlockedUsers: false,
+            showBlacklist: false,
+            showSettings: false,
+            showChat: false,
+            chatUser: {},
+        };
+    },
     methods: {
         pushMessage(content, sender, recepiend) {
             if (content.length > 0) {
@@ -272,7 +283,7 @@ export default {
                     "content": content,
                     "recipientId": recepiend.id
                 });
-                this.message = "";
+                this.messageText = "";
             }
         },
         handleLogout() {
@@ -304,24 +315,6 @@ export default {
         },
         followUser(user) {
             UserService.followUser(user.id).then(
-                response => {
-                    console.log(response.data.data);
-                    this.user = response.data.data;
-                    this.followedUsers = response.data.data.followedUsers;
-                    this.blockedUsers = response.data.data.blockedUsers;
-                    this.chats = response.data.data.chats;
-                },
-                error => {
-                    console.log(error);
-                    this.content =
-                        (error.response && error.response.data && error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-                }
-            );
-        },
-        unfollowUser(user) {
-            UserService.unfollowUser(user.id).then(
                 response => {
                     console.log(response.data.data);
                     this.user = response.data.data;
@@ -374,10 +367,24 @@ export default {
                 }
             );
         },
-        openChat(user) {
-            this.showChat = true;
-            this.chatUser = user;
-            this.message = '';
+        deleteChatUser(user){
+            UserService.deleteUserChat(user.id).then(
+                response => {
+                    console.log(response.data.data);
+                    this.user = response.data.data;
+                    this.followedUsers = response.data.data.followedUsers;
+                    this.blockedUsers = response.data.data.blockedUsers;
+                    this.chats = response.data.data.chats;
+                    this.clearChat();
+                },
+                error => {
+                    console.log(error);
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
         },
         clearLeftBar() {
             this.foundUsers = [];
@@ -389,10 +396,6 @@ export default {
             this.showBlockedUsers = false;
             this.showBlacklist = false;
             this.showSettings = false;
-        },
-        clearChat() {
-            this.showChat = false;
-            this.chatUser = {};
         },
         formatDate(date) {
             const year = date.getFullYear();
@@ -425,27 +428,6 @@ export default {
 
             return `${formattedHours}:${formattedMinutes} ${ampm}, ${displayDate}`;
         },
-    },
-    data() {
-        return {
-            message: {},
-            messages: [],
-            user: {},
-            followedUsers: [],
-            blockedUsers: [],
-            chats: [],
-            foundUsers: [],
-            searchQuery: '',
-            searchError: '',
-            showSearch: false,
-            showChatList: true,
-            showFollowedUsers: false,
-            showBlockedUsers: false,
-            showBlacklist: false,
-            showSettings: false,
-            showChat: false,
-            chatUser: {},
-        };
     },
     mounted() {
         this.$options.sockets.onmessage = (data) => {
@@ -496,7 +478,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 
 body {
     background-color: #f4f7f6;

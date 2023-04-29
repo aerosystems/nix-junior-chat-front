@@ -2,7 +2,7 @@ import TokenService from './services/token.service';
 import store from "./store";
 
 const websocket = {
-    url: "ws://localhost:80/ws/chat?accessToken=" + TokenService.getLocalAccessToken(),
+    url: "ws://localhost:80/ws/chat?token=" + TokenService.getLocalAccessToken(),
     options: {
         store: store,
         format: "json",

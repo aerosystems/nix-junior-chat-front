@@ -24,6 +24,10 @@ class UserService {
     unblockUser(id) {
         return api.delete(`/v1/user/block/${id}`);
     }
+
+    deleteUserChat(id) {
+        return api.delete(`/v1/user/chat/${id}`);
+    }
 }
 
 export default new UserService();
