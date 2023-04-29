@@ -1,14 +1,14 @@
 <template>
-    <div @click="openChatlist()" class="clearfix">
-        <img :src="followedUser.image" alt="avatar">
+    <div class="clearfix">
+        <img :src="blockedUser.image" alt="avatar">
         <div class="about">
-            <div class="name">{{ followedUser.username }}</div>
+            <div class="name">{{ blockedUser.username }}</div>
             <div class="status">
                 <i class="fa fa-circle offline"></i> offline
             </div>
         </div>
         <div>
-            <button @click="unfollowUser(followedUser)"
+            <button @click="unblockUser(blockedUser)"
                     class="btn btn-outline-secondary trash">
                 <font-awesome-icon icon="trash"/>
             </button>
@@ -17,23 +17,20 @@
 </template>
 
 <script>
-
 export default {
-    name: "FollowedUsersItem",
+    name: "BlockedUsersItem",
     props: {
-        followedUser: {
+        blockedUser: {
             type: Object,
             required: true,
         },
     },
     methods: {
-        openChatlist(chatUser) {
-            this.$store.dispatch('chat/openChatlist', chatUser);
-        },
-        unfollowUser(user) {
-            this.$store.dispatch('user/unfollowUser', user);
+        unblockUser(user) {
+            this.$store.dispatch('user/unblockUser', user);
         },
     },
+
 }
 </script>
 

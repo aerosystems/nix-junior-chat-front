@@ -10,11 +10,6 @@
 import EventBus from "./common/EventBus";
 
 export default {
-    computed: {
-        currentUser() {
-            return this.$store.state.auth.user;
-        }
-    },
     methods: {
         logOut() {
             this.$store.dispatch('auth/logout');

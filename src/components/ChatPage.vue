@@ -67,7 +67,7 @@
                         </div>
 
                         <!-- Followed Users -->
-                        <followed-users-list v-if="showFollowedUsers" :followedUsers="followedUsers" />
+                        <followed-users-list />
 
                         <!--Settings-->
                         <div v-if="showSettings">
@@ -111,35 +111,7 @@
                         </div>
 
                         <!-- Blocked Users -->
-                        <div v-if="showBlockedUsers">
-                            <ul class="list-unstyled chat-list mt-2 mb-0">
-                                <li>
-                                    <div @click="clearLeftBar(); showSettings = true" class="clearfix row">
-                                        <div class="col-lg-6">
-                                            <font-awesome-icon icon="angle-left"/>
-                                        </div>
-                                        <div class="col-lg-6 text-right">Back</div>
-                                    </div>
-                                </li>
-                                <li v-for="blockedUser in blockedUsers" :key="blockedUser.id">
-                                    <div class="clearfix">
-                                        <img :src="blockedUser.image" alt="avatar">
-                                        <div class="about">
-                                            <div class="name">{{ blockedUser.username }}</div>
-                                            <div class="status">
-                                                <i class="fa fa-circle offline"></i> offline
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <button @click="unblockUser(blockedUser)"
-                                                    class="btn btn-outline-secondary trash">
-                                                <font-awesome-icon icon="trash"/>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        <blocked-users-list />
 
                     </div>
                     <div class="bar">
@@ -244,10 +216,11 @@ import UserService from '../services/user.service';
 import EventBus from "../common/EventBus";
 
 import FollowedUsersList from "@/components/FollowedUsersList.vue";
-
+import BlockedUsersList from "@/components/BlockedUsersList.vue";
 export default {
+
     name: 'ChatPage',
-    components: {FollowedUsersList},
+    components: {FollowedUsersList, BlockedUsersList},
     data() {
         return {
             messageText: '',
@@ -333,24 +306,6 @@ export default {
         },
         blockUser(user) {
             UserService.blockUser(user.id).then(
-                response => {
-                    console.log(response.data.data);
-                    this.user = response.data.data;
-                    this.followedUsers = response.data.data.followedUsers;
-                    this.blockedUsers = response.data.data.blockedUsers;
-                    this.chats = response.data.data.chats;
-                },
-                error => {
-                    console.log(error);
-                    this.content =
-                        (error.response && error.response.data && error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-                }
-            );
-        },
-        unblockUser(user) {
-            UserService.unblockUser(user.id).then(
                 response => {
                     console.log(response.data.data);
                     this.user = response.data.data;
@@ -470,11 +425,6 @@ export default {
             }
         );
     },
-    computed: {
-        currentUser() {
-            return this.$store.state.auth.user;
-        },
-    }
 };
 </script>
 
