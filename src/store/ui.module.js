@@ -15,6 +15,12 @@ export const ui = {
         },
         showChatList({ commit }) {
             commit('openChatList');
+        },
+        showBlacklist({ commit }) {
+            commit('openBlacklist');
+        },
+        clearSideBar({ commit }) {
+            commit('clearSideBar');
         }
     },
     mutations: {
@@ -35,6 +41,24 @@ export const ui = {
             state.showBlacklist = false;
             state.showSettings = false;
             state.showChat = false;
+        },
+        openBlacklist(state) {
+            state.showSearch = false;
+            state.showChatList = false;
+            state.showFollowedUsers = false;
+            state.showBlockedUsers = false;
+            state.showBlacklist = true;
+            state.showSettings = false;
+            state.showChat = false;
+        },
+        clearSideBar(state) {
+            state.showSearch = false;
+            state.showChatList = false;
+            state.showFollowedUsers = false;
+            state.showBlockedUsers = false;
+            state.showBlacklist = false;
+            state.showSettings = false;
+            state.showChat = true;
         }
     }
 }

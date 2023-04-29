@@ -70,45 +70,7 @@
                         <followed-users-list />
 
                         <!--Settings-->
-                        <div v-if="showSettings">
-                            <ul class="list-unstyled chat-list mt-2 mb-0">
-                                <li>
-                                    <div class="name row">
-                                        <div class="col-lg-6">Username</div>
-                                        <div class="col-lg-6 text-right">
-                                            <font-awesome-icon icon="angle-right"/>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="name row">
-                                        <div class="col-lg-6">Password</div>
-                                        <div class="col-lg-6 text-right">
-                                            <font-awesome-icon icon="angle-right"/>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="name row">
-                                        <div class="col-lg-6">Image</div>
-                                        <div class="col-lg-6 text-right">
-                                            <font-awesome-icon icon="angle-right"/>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div @click="clearLeftBar(); showBlockedUsers = true" class="name row">
-                                        <div class="col-lg-6">Blacklist</div>
-                                        <div class="col-lg-6 text-right">
-                                            <font-awesome-icon icon="angle-right"/>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div @click="handleLogout" class="name">Logout</div>
-                                </li>
-                            </ul>
-                        </div>
+                        <settings-list />
 
                         <!-- Blocked Users -->
                         <blocked-users-list />
@@ -217,10 +179,11 @@ import EventBus from "../common/EventBus";
 
 import FollowedUsersList from "@/components/FollowedUsersList.vue";
 import BlockedUsersList from "@/components/BlockedUsersList.vue";
+import SettingsList from "@/components/SettingsList.vue";
 export default {
 
     name: 'ChatPage',
-    components: {FollowedUsersList, BlockedUsersList},
+    components: {FollowedUsersList, BlockedUsersList, SettingsList},
     data() {
         return {
             messageText: '',
