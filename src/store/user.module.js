@@ -44,5 +44,23 @@ export const user = {
                 }
             );
         },
+        deleteChatUser(user){
+            UserService.deleteUserChat(user.id).then(
+                response => {
+                    console.log(response.data.data);
+                    this.user = response.data.data;
+                    this.followedUsers = response.data.data.followedUsers;
+                    this.blockedUsers = response.data.data.blockedUsers;
+                    this.chatUsers = response.data.data.chats;
+                },
+                error => {
+                    console.log(error);
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
+        },
     }
 }

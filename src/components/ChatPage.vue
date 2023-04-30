@@ -44,27 +44,7 @@
                         </div>
 
                         <!-- Chats -->
-                        <div v-if="showChatList">
-                            <ul class="list-unstyled chat-list mt-2 mb-0">
-                                <li v-for="chat in chats" :key="chat.id">
-                                    <div @click="showChat = !showChat; chatUser = chat" class="clearfix">
-                                        <img :src="chat.image" alt="avatar">
-                                        <div class="about">
-                                            <div class="name">{{ chat.username }}</div>
-                                            <div class="status">
-                                                <i class="fa fa-circle offline"></i> offline
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <button @click="deleteChatUser(chat);"
-                                                    class="btn btn-outline-secondary trash">
-                                                <font-awesome-icon icon="trash"/>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        <chats-list />
 
                         <!-- Followed Users -->
                         <followed-users-list />
@@ -180,10 +160,11 @@ import EventBus from "../common/EventBus";
 import FollowedUsersList from "@/components/FollowedUsersList.vue";
 import BlockedUsersList from "@/components/BlockedUsersList.vue";
 import SettingsList from "@/components/SettingsList.vue";
+import ChatsList from "@/components/ChatsList.vue";
 export default {
 
     name: 'ChatPage',
-    components: {FollowedUsersList, BlockedUsersList, SettingsList},
+    components: {FollowedUsersList, BlockedUsersList, SettingsList, ChatsList},
     data() {
         return {
             messageText: '',
@@ -275,25 +256,6 @@ export default {
                     this.followedUsers = response.data.data.followedUsers;
                     this.blockedUsers = response.data.data.blockedUsers;
                     this.chats = response.data.data.chats;
-                },
-                error => {
-                    console.log(error);
-                    this.content =
-                        (error.response && error.response.data && error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-                }
-            );
-        },
-        deleteChatUser(user){
-            UserService.deleteUserChat(user.id).then(
-                response => {
-                    console.log(response.data.data);
-                    this.user = response.data.data;
-                    this.followedUsers = response.data.data.followedUsers;
-                    this.blockedUsers = response.data.data.blockedUsers;
-                    this.chats = response.data.data.chats;
-                    this.clearChat();
                 },
                 error => {
                     console.log(error);
