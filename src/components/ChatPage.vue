@@ -49,7 +49,7 @@
                         <!-- Followed Users -->
                         <followed-users-list />
 
-                        <!--Settings-->
+                        <!-- Settings -->
                         <settings-list />
 
                         <!-- Blocked Users -->
@@ -57,20 +57,8 @@
 
                     </div>
                     <div class="bar">
-                        <div class="col-lg-12 hidden-sm text-center">
-                            <button @click="clearLeftBar(); showChatList = true" class="btn"
-                                    :class="showChatList ? 'btn-outline-primary' : 'btn-outline-secondary'">
-                                <font-awesome-icon icon="message"/>
-                            </button>
-                            <button @click="clearLeftBar(); showFollowedUsers = true" class="btn"
-                                    :class="showFollowedUsers ? 'btn-outline-primary' : 'btn-outline-secondary'">
-                                <font-awesome-icon icon="user-friends"/>
-                            </button>
-                            <button @click="clearLeftBar(); showSettings = true" class="btn"
-                                    :class="showSettings ? 'btn-outline-primary' : 'btn-outline-secondary'">
-                                <font-awesome-icon icon="user-gear"/>
-                            </button>
-                        </div>
+                        <!-- Nav Bar -->
+                        <nav-bar />
                     </div>
                     <div v-if="showChat" class="chat">
                         <div class="chat-header clearfix">
@@ -161,10 +149,11 @@ import FollowedUsersList from "@/components/FollowedUsersList.vue";
 import BlockedUsersList from "@/components/BlockedUsersList.vue";
 import SettingsList from "@/components/SettingsList.vue";
 import ChatsList from "@/components/ChatsList.vue";
+import NavBar from "@/components/NavBar.vue";
 export default {
 
     name: 'ChatPage',
-    components: {FollowedUsersList, BlockedUsersList, SettingsList, ChatsList},
+    components: {NavBar, FollowedUsersList, BlockedUsersList, SettingsList, ChatsList},
     data() {
         return {
             messageText: '',

@@ -21,44 +21,50 @@ export const ui = {
         },
         clearSideBar({ commit }) {
             commit('clearSideBar');
+        },
+        showChat({ commit }) {
+            commit('openChat');
+        },
+        showFollowedUsers({ commit }) {
+            commit('resetState');
+            commit('openFollowedUsers');
+        },
+        showBlockedUsers({ commit }) {
+            commit('openBlockedUsers');
         }
     },
     mutations: {
+        resetState(state) {
+            Object.keys(state).forEach(key => {
+                state[key] = false;
+            });
+        },
         openSettings(state) {
-            state.showSearch = false;
-            state.showChatList = false;
-            state.showFollowedUsers = false;
-            state.showBlockedUsers = false;
-            state.showBlacklist = false;
+            this.commit('resetState');
             state.showSettings = true;
-            state.showChat = false;
         },
         openChatList(state) {
-            state.showSearch = false;
+            this.commit('resetState');
             state.showChatList = true;
-            state.showFollowedUsers = false;
-            state.showBlockedUsers = false;
-            state.showBlacklist = false;
-            state.showSettings = false;
-            state.showChat = false;
         },
         openBlacklist(state) {
-            state.showSearch = false;
-            state.showChatList = false;
-            state.showFollowedUsers = false;
-            state.showBlockedUsers = false;
+            this.commit('resetState');
             state.showBlacklist = true;
-            state.showSettings = false;
-            state.showChat = false;
         },
         clearSideBar(state) {
-            state.showSearch = false;
-            state.showChatList = false;
-            state.showFollowedUsers = false;
-            state.showBlockedUsers = false;
-            state.showBlacklist = false;
-            state.showSettings = false;
+            this.commit('resetState');
             state.showChat = true;
+        },
+        openChat(state) {
+            this.commit('resetState');
+            state.showChat = true;
+        },
+        openFollowedUsers(state) {
+            state.showFollowedUsers = true;
+        },
+        openBlockedUsers(state) {
+            this.commit('resetState');
+            state.showBlockedUsers = true;
         }
     }
 }
