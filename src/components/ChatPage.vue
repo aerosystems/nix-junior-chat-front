@@ -2,65 +2,36 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
 
     <div class="container">
-
         <div class="row clearfix">
             <div class="col-lg-12">
                 <div class="card chat-app">
+                    <!-- Sidebar -->
                     <div id="plist" class="people-list">
                         <!-- Search -->
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-search"></i></span>
-                            </div>
-                            <input v-model="searchQuery" @input="checkInputValue"
-                                   @click="clearLeftBar(); showSearch = true"
-                                   type="text" class="form-control" placeholder="Search...">
-                        </div>
-                        <div v-if="showSearch">
-                            <div>
-                                <ul class="list-unstyled chat-list mt-2 mb-0">
-                                    <li v-for="foundUser in foundUsers" :key="foundUser.id">
-                                        <div @click="openChat(foundUser)" class="clearfix">
-                                            <img :src="foundUser.image" alt="avatar">
-                                            <div class="about">
-                                                <div class="name">{{ foundUser.username }}</div>
-                                                <div class="status">
-                                                    <i class="fa fa-circle offline"></i> online
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div v-if="searchError !== '' && searchQuery !== ''">
-                                <ul class="list-unstyled chat-list mt-2 mb-0">
-                                    <li>
-                                        <div class="clearfix">
-                                            <div>{{ searchError }}</div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        <search-input/>
+                        <search-list/>
+                        <search-item/>
 
                         <!-- Chats -->
-                        <chats-list />
+                        <chats-list/>
 
                         <!-- Followed Users -->
-                        <followed-users-list />
+                        <followed-users-list/>
 
                         <!-- Settings -->
-                        <settings-list />
+                        <settings-list/>
 
                         <!-- Blocked Users -->
-                        <blocked-users-list />
+                        <blocked-users-list/>
 
                     </div>
                     <div class="bar">
-                        <!-- Nav Bar -->
-                        <nav-bar />
+                        <!-- Navbar -->
+                        <nav-bar/>
                     </div>
+                    <!-- Chat -->
                     <div v-if="showChat" class="chat">
+
                         <div class="chat-header clearfix">
                             <div class="row">
                                 <div class="col-lg-6">
@@ -150,28 +121,28 @@ import BlockedUsersList from "@/components/BlockedUsersList.vue";
 import SettingsList from "@/components/SettingsList.vue";
 import ChatsList from "@/components/ChatsList.vue";
 import NavBar from "@/components/NavBar.vue";
-export default {
+import SearchInput from "@/components/SearchInput.vue";
+import SearchList from "@/components/SearchList.vue";
+import SearchItem from "@/components/SearchItem.vue";
 
+export default {
     name: 'ChatPage',
-    components: {NavBar, FollowedUsersList, BlockedUsersList, SettingsList, ChatsList},
+    components: {
+        SearchInput,
+        SearchList,
+        SearchItem,
+        NavBar,
+        FollowedUsersList,
+        BlockedUsersList,
+        SettingsList,
+        ChatsList
+    },
     data() {
         return {
             messageText: '',
             message: {},
             messages: [],
-            user: {},
-            followedUsers: [],
-            blockedUsers: [],
             chats: [],
-            foundUsers: [],
-            searchQuery: '',
-            searchError: '',
-            showSearch: false,
-            showChatList: true,
-            showFollowedUsers: false,
-            showBlockedUsers: false,
-            showBlacklist: false,
-            showSettings: false,
             showChat: false,
             chatUser: {},
         };
@@ -195,76 +166,6 @@ export default {
         handleLogout() {
             EventBus.dispatch("logout");
             this.$router.push('/login');
-        },
-        checkInputValue() {
-            if (this.searchQuery.length >= 1) {
-                this.searchUser();
-            } else {
-                this.foundUsers = [];
-            }
-        },
-        searchUser() {
-            UserService.searchUser(this.searchQuery).then(
-                response => {
-                    this.foundUsers = response.data.data;
-                    this.searchError = "";
-                },
-                error => {
-                    this.searchError = "Users not found"
-                    console.log(error);
-                    this.content =
-                        (error.response && error.response.data && error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-                }
-            );
-        },
-        followUser(user) {
-            UserService.followUser(user.id).then(
-                response => {
-                    console.log(response.data.data);
-                    this.user = response.data.data;
-                    this.followedUsers = response.data.data.followedUsers;
-                    this.blockedUsers = response.data.data.blockedUsers;
-                    this.chats = response.data.data.chats;
-                },
-                error => {
-                    console.log(error);
-                    this.content =
-                        (error.response && error.response.data && error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-                }
-            );
-        },
-        blockUser(user) {
-            UserService.blockUser(user.id).then(
-                response => {
-                    console.log(response.data.data);
-                    this.user = response.data.data;
-                    this.followedUsers = response.data.data.followedUsers;
-                    this.blockedUsers = response.data.data.blockedUsers;
-                    this.chats = response.data.data.chats;
-                },
-                error => {
-                    console.log(error);
-                    this.content =
-                        (error.response && error.response.data && error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-                }
-            );
-        },
-        clearLeftBar() {
-            this.foundUsers = [];
-            this.searchQuery = '';
-            this.showSearch = false;
-            this.searchError = '';
-            this.showChatList = false;
-            this.showFollowedUsers = false;
-            this.showBlockedUsers = false;
-            this.showBlacklist = false;
-            this.showSettings = false;
         },
         formatDate(date) {
             const year = date.getFullYear();
@@ -309,21 +210,21 @@ export default {
                 let sender = {};
                 sender.id = responseObj.senderId;
                 sender.image =
-                this.messages.push({
-                    content: responseObj.content,
-                    sender: responseObj.senderId,
-                    recepiend: responseObj.recepiendId,
-                    date: date,
-                });
+                    this.messages.push({
+                        content: responseObj.content,
+                        sender: responseObj.senderId,
+                        recepiend: responseObj.recepiendId,
+                        date: date,
+                    });
             }
             console.log(responseObj);
         };
         UserService.getUser().then(
             response => {
-                this.user = response.data.data;
-                this.followedUsers = response.data.data.followedUsers;
-                this.blockedUsers = response.data.data.blockedUsers;
-                this.chats = response.data.data.chats;
+                this.$store.user.user = response.data.data;
+                this.$store.user.followedUsers = response.data.data.followedUsers;
+                this.$store.user.blockedUsers = response.data.data.blockedUsers;
+                this.$store.user.chatUsers = response.data.data.chats;
             },
             error => {
                 console.log(error);
