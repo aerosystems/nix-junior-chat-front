@@ -5,38 +5,42 @@ export const ui = {
         showChatList: false,
         showFollowedUsers: false,
         showBlockedUsers: false,
-        showBlacklist: false,
         showSettings: false,
         showChat: false,
         searchInput: '',
-        foundUsers: []
-
+        foundUsers: [],
+        chatUser: {}
     },
     actions: {
-        showSettings({commit}) {
-            commit('openSettings');
+        clearSidebar({commit}) {
+            commit('clearSidebar');
         },
         showChatList({commit}) {
+            commit('resetState');
             commit('openChatList');
         },
-        showBlacklist({commit}) {
-            commit('openBlacklist');
-        },
-        clearSideBar({commit}) {
-            commit('clearSideBar');
-        },
-        showChat({commit}) {
-            commit('openChat');
-        },
         showFollowedUsers({commit}) {
+            commit('resetState');
             commit('openFollowedUsers');
         },
+        showSettings({commit}) {
+            commit('resetState');
+            commit('openSettings');
+        },
         showBlockedUsers({commit}) {
+            commit('resetState');
             commit('openBlockedUsers');
         },
-        showSearchList: ({commit}) => {
-            commit('openSearchList');
+        showChat({commit}, user) {
+            commit('resetState');
+            commit('openChat', user);
         },
+        setFoundUsers: ({commit}, users) => {
+            commit('setFoundUsers', users);
+        },
+        setSearchInput: ({commit}, input) => {
+            commit('setSearchInput', input);
+        }
     },
     mutations: {
         resetState(state) {
@@ -44,41 +48,42 @@ export const ui = {
             state.showChatList = false;
             state.showFollowedUsers = false;
             state.showBlockedUsers = false;
-            state.showBlacklist = false;
             state.showSettings = false;
             state.showChat = false;
+            state.searchInput = '';
+            state.foundUsers = [];
         },
-        clearSideBar(state) {
-            this.commit('resetState');
+        clearSidebar(state) {
+            state.showSearch = false;
+            state.showChatList = false;
+            state.showFollowedUsers = false;
+            state.showBlockedUsers = false;
+            state.showSettings = false;
             state.showChat = true;
+            state.searchInput = '';
+            state.foundUsers = [];
         },
         openSettings(state) {
-            this.commit('resetState');
             state.showSettings = true;
         },
         openChatList(state) {
-            this.commit('resetState');
             state.showChatList = true;
         },
-        openBlacklist(state) {
-            this.commit('resetState');
-            state.showBlacklist = true;
-        },
-        openChat(state) {
-            this.commit('resetState');
+        openChat(state, user) {
             state.showChat = true;
+            state.chatUser = user;
         },
         openFollowedUsers(state) {
-            this.commit('resetState');
             state.showFollowedUsers = true;
         },
         openBlockedUsers(state) {
-            this.commit('resetState');
             state.showBlockedUsers = true;
         },
-        openSearchList(state) {
-            this.commit('resetState');
-            state.showSearch = true;
+        setFoundUsers(state, users) {
+            state.foundUsers = users;
+        },
+        setSearchInput(state, input) {
+            state.searchInput = input;
         }
     }
 }

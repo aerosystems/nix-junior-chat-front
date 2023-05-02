@@ -1,5 +1,5 @@
 <template>
-    <ul v-if="showBlacklist" class="list-unstyled chat-list mt-2 mb-0" >
+    <ul v-if="showBlockedUsers" class="list-unstyled chat-list mt-2 mb-0" >
         <li>
             <div @click="showSettings()" class="clearfix row">
                 <div class="col-lg-6">
@@ -27,7 +27,7 @@ export default {
     },
     computed: {
         ...mapState({
-            showBlacklist: state => state.ui.showBlacklist,
+            showBlockedUsers: state => state.ui.showBlockedUsers,
             blockedUsers: state => state.user.blockedUsers,
         })
     }

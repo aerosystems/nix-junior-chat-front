@@ -26,7 +26,7 @@
                 </div>
             </li>
             <li>
-                <div @click="clearSideBar(); toggleShowBlacklist()" class="name row">
+                <div @click="clearSidebar(); toggleShowBlacklist()" class="name row">
                     <div class="col-lg-6">Blacklist</div>
                     <div class="col-lg-6 text-right">
                         <font-awesome-icon icon="angle-right"/>
@@ -48,11 +48,11 @@ export default {
         handleLogout() {
             this.$store.dispatch('user/logout');
         },
-        clearSideBar() {
-            this.$store.dispatch('ui/clearSideBar');
+        clearSidebar() {
+            this.$store.dispatch('ui/clearSidebar');
         },
-        showBlacklist() {
-            this.$store.dispatch('ui/showBlacklist');
+        showBlockedUsers() {
+            this.$store.dispatch('ui/showBlockedUsers');
         },
     },
     computed: {

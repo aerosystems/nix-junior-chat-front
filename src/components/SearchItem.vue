@@ -12,7 +12,18 @@
 
 <script>
 export default {
-
+    name: "SearchItem",
+    props: {
+        foundUser: {
+            type: Object,
+            required: true
+        }
+    },
+    methods: {
+        openChat(foundUser) {
+            this.$store.dispatch('ui/showChat', foundUser);
+        }
+    }
 }
 </script>
 
