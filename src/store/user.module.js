@@ -8,6 +8,24 @@ export const user = {
         chatUsers: []
     },
     actions: {
+        followUser(user) {
+            UserService.followUser(user.id).then(
+                response => {
+                    console.log(response.data.data);
+                    this.user = response.data.data;
+                    this.followedUsers = response.data.data.followedUsers;
+                    this.blockedUsers = response.data.data.blockedUsers;
+                    this.chats = response.data.data.chats;
+                },
+                error => {
+                    console.log(error);
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
+        },
         unfollowUser(user) {
             UserService.unfollowUser(user.id).then(
                 response => {
@@ -16,6 +34,24 @@ export const user = {
                     this.followedUsers = response.data.data.followedUsers;
                     this.blockedUsers = response.data.data.blockedUsers;
                     this.chats = response.data.data.chats;
+                },
+                error => {
+                    console.log(error);
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
+        },
+        blockUser(user) {
+            UserService.blockUser(user.id).then(
+                response => {
+                    console.log(response.data.data);
+                    this.user = response.data.data;
+                    this.followedUsers = response.data.data.followedUsers;
+                    this.blockedUsers = response.data.data.blockedUsers;
+                    this.chatUsers = response.data.data.chats;
                 },
                 error => {
                     console.log(error);

@@ -35,17 +35,14 @@ export default {
         },
         checkInputValue() {
             this.$store.dispatch('ui/setSearchInput', this.searchQuery);
-            switch (this.searchQuery) {
-                case '':
-                    this.$store.dispatch('ui/setFoundUsers', []);
-                    break;
-                default:
-                    this.searchUser();
-                    break;
+            if (this.searchQuery.length !== 0) {
+                this.searchUser(this.searchQuery);
+            } else {
+                this.$store.dispatch('ui/setFoundUsers', []);
             }
         },
-        searchUser() {
-            UserService.searchUser(this.searchQuery).then(
+        searchUser(query) {
+            UserService.searchUser(query).then(
                 response => {
                     this.$store.dispatch('ui/setFoundUsers', response.data.data);
                 },

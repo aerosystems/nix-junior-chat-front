@@ -1,25 +1,37 @@
 <template>
-        <ul class="m-b-0">
-            <li v-for="(message, index) in messages" :key="index" class="clearfix">
-                <div class="message-data"
-                     :class="message.sender.id === user.id ? 'text-left' : 'text-right'">
-                    <img v-if="message.sender.id === user.id" :src="message.sender.image"
-                         alt="avatar">
-                    <span class="message-data-time">{{ formattedDate(message.date) }}</span>
-                    <img v-if="message.sender.id !== user.id" :src="message.sender.image"
-                         alt="avatar">
-                </div>
-                <div class="message"
-                     :class="message.sender.id === user.id ? 'my-message float-left' : 'other-message float-right'">
-                    {{ message.content }}
-                </div>
-            </li>
-        </ul>
+    <ul class="m-b-0">
+        <li v-for="(message, index) in messages" :key="index" class="clearfix">
+            <div class="message-data"
+                 :class="message.sender.id === userState.id ? 'text-left' : 'text-right'">
+                <img v-if="message.sender.id === userState.id" :src="message.sender.image"
+                     alt="avatar">
+                <span class="message-data-time">{{ formattedDate(message.date) }}</span>
+                <img v-if="message.sender.id !== userState.id" :src="message.sender.image"
+                     alt="avatar">
+            </div>
+            <div class="message"
+                 :class="message.sender.id === userState.id ? 'my-message float-left' : 'other-message float-right'">
+                {{ message.content }}
+            </div>
+        </li>
+    </ul>
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
     name: "ChatHistory",
+    computed: {
+        ...mapState({
+            userState: state => state.user.user,
+        }),
+    },
+    data() {
+        return {
+            messages: [],
+        }
+    },
     methods: {
         formatDate(date) {
             const year = date.getFullYear();

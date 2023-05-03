@@ -15,25 +15,28 @@ export const ui = {
         clearSidebar({commit}) {
             commit('clearSidebar');
         },
+        clearChat({commit}) {
+            commit('clearChat');
+        },
         showChatList({commit}) {
-            commit('resetState');
+            commit('clearSidebar');
             commit('openChatList');
         },
         showFollowedUsers({commit}) {
-            commit('resetState');
+            commit('clearSidebar');
             commit('openFollowedUsers');
         },
         showSettings({commit}) {
-            commit('resetState');
+            commit('clearSidebar');
             commit('openSettings');
         },
         showBlockedUsers({commit}) {
-            commit('resetState');
+            commit('clearSidebar');
             commit('openBlockedUsers');
         },
-        showChat({commit}, user) {
+        showChat({commit}) {
             commit('resetState');
-            commit('openChat', user);
+            commit('openChat');
         },
         setFoundUsers: ({commit}, users) => {
             commit('setFoundUsers', users);
@@ -50,8 +53,6 @@ export const ui = {
             state.showBlockedUsers = false;
             state.showSettings = false;
             state.showChat = false;
-            state.searchInput = '';
-            state.foundUsers = [];
         },
         clearSidebar(state) {
             state.showSearch = false;
@@ -59,9 +60,12 @@ export const ui = {
             state.showFollowedUsers = false;
             state.showBlockedUsers = false;
             state.showSettings = false;
-            state.showChat = true;
             state.searchInput = '';
             state.foundUsers = [];
+        },
+        clearChat(state) {
+            state.showChat = false;
+            state.chatUser = {};
         },
         openSettings(state) {
             state.showSettings = true;
@@ -69,9 +73,8 @@ export const ui = {
         openChatList(state) {
             state.showChatList = true;
         },
-        openChat(state, user) {
+        openChat(state) {
             state.showChat = true;
-            state.chatUser = user;
         },
         openFollowedUsers(state) {
             state.showFollowedUsers = true;

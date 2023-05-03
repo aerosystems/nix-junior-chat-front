@@ -21,7 +21,8 @@ export default {
     },
     methods: {
         openChat(foundUser) {
-            this.$store.dispatch('ui/showChat', foundUser);
+            this.$store.dispatch('chat/setCompanion', foundUser);
+            this.$store.dispatch('ui/showChat');
         }
     }
 }
