@@ -15,7 +15,7 @@ export default {
     computed: {
         ...mapState({
             showFollowedUsers: state => state.ui.showFollowedUsers,
-            followedUsers: state => state.user.followedUsers,
+            followedUsers: state => state.user.user.followedUsers,
         })
     }
 }

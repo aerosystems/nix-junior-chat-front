@@ -46,8 +46,8 @@ export default {
     computed: {
         ...mapState({
             companionState: state => state.chat.companion,
-            followedUsersState: state => state.user.followedUsers,
-            blockedUsersState: state => state.user.blockedUsers,
+            followedUsersState: state => state.user.user.followedUsers,
+            blockedUsersState: state => state.user.user.blockedUsers,
         }),
     },
     methods: {

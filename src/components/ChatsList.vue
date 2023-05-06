@@ -16,7 +16,7 @@ export default {
     computed: {
         ...mapState({
             showChatlist: state => state.ui.showChatList,
-            chatUsers: state => state.user.chatUsers,
+            chatUsers: state => state.user.user.chatUsers,
         })
     }
 }

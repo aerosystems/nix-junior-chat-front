@@ -47,7 +47,7 @@ export default {
                     this.$store.dispatch('ui/setFoundUsers', response.data.data);
                 },
                 error => {
-                    console.log(error);
+                    //console.log(error);
                     this.content =
                         (error.response && error.response.data && error.response.data.message) ||
                         error.message ||

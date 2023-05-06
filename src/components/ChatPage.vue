@@ -23,8 +23,8 @@
                         <blocked-users-list/>
 
                     </div>
+                    <!-- Navbar -->
                     <div class="bar">
-                        <!-- Navbar -->
                         <nav-bar/>
                     </div>
                     <!-- Chat -->
@@ -38,9 +38,6 @@
 </template>
 
 <script>
-import UserService from '../services/user.service';
-import EventBus from "../common/EventBus";
-
 import ChatsList from "@/components/ChatsList.vue";
 import FollowedUsersList from "@/components/FollowedUsersList.vue";
 import BlockedUsersList from "@/components/BlockedUsersList.vue";
@@ -80,28 +77,9 @@ export default {
                         date: date,
                     });
             }
-            console.log(responseObj);
+            //console.log(responseObj);
         };
-        UserService.getUser().then(
-            response => {
-                this.$store.user.user = response.data.data;
-                this.$store.user.followedUsers = response.data.data.followedUsers;
-                this.$store.user.blockedUsers = response.data.data.blockedUsers;
-                this.$store.user.chatUsers = response.data.data.chats;
-            },
-            error => {
-                console.log(error);
-                this.content =
-                    (error.response && error.response.data && error.response.data.message) ||
-                    error.message ||
-                    error.toString();
-
-                if (error.response && error.response.status !== 200) {
-                    EventBus.dispatch("logout");
-                    this.$router.push('/login');
-                }
-            }
-        );
+        this.$store.dispatch('user/setUser');
     },
 };
 </script>

@@ -1,24 +1,33 @@
 import UserService from '@/services/user.service';
+import EventBus from "@/common/EventBus";
 export const user = {
     namespaced: true,
     state: {
-        user: {},
-        followedUsers: [],
-        blockedUsers: [],
-        chatUsers: []
+        user: {}
     },
     actions: {
-        followUser(user) {
-            UserService.followUser(user.id).then(
+        setUser({ commit }) {
+            UserService.getUser().then(
                 response => {
-                    console.log(response.data.data);
-                    this.user = response.data.data;
-                    this.followedUsers = response.data.data.followedUsers;
-                    this.blockedUsers = response.data.data.blockedUsers;
-                    this.chats = response.data.data.chats;
+                    commit('setUser', response.data.data);
                 },
                 error => {
-                    console.log(error);
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                    if (error.response.status !== 200) {
+                        EventBus.dispatch("logout");
+                    }
+                }
+            );
+        },
+        followUser({ commit }, followedUser) {
+            UserService.followUser(followedUser.id).then(
+                response => {
+                    commit('setUser', response.data.data);
+                },
+                error => {
                     this.content =
                         (error.response && error.response.data && error.response.data.message) ||
                         error.message ||
@@ -26,17 +35,12 @@ export const user = {
                 }
             );
         },
-        unfollowUser(user) {
-            UserService.unfollowUser(user.id).then(
+        unfollowUser({ commit}, unfollowedUser) {
+            UserService.unfollowUser(unfollowedUser.id).then(
                 response => {
-                    console.log(response.data.data);
-                    this.user = response.data.data;
-                    this.followedUsers = response.data.data.followedUsers;
-                    this.blockedUsers = response.data.data.blockedUsers;
-                    this.chats = response.data.data.chats;
+                    commit('setUser', response.data.data);
                 },
                 error => {
-                    console.log(error);
                     this.content =
                         (error.response && error.response.data && error.response.data.message) ||
                         error.message ||
@@ -44,17 +48,12 @@ export const user = {
                 }
             );
         },
-        blockUser(user) {
-            UserService.blockUser(user.id).then(
+        blockUser({ commit}, blockedUser) {
+            UserService.blockUser(blockedUser.id).then(
                 response => {
-                    console.log(response.data.data);
-                    this.user = response.data.data;
-                    this.followedUsers = response.data.data.followedUsers;
-                    this.blockedUsers = response.data.data.blockedUsers;
-                    this.chatUsers = response.data.data.chats;
+                    commit('setUser', response.data.data);
                 },
                 error => {
-                    console.log(error);
                     this.content =
                         (error.response && error.response.data && error.response.data.message) ||
                         error.message ||
@@ -62,17 +61,12 @@ export const user = {
                 }
             );
         },
-        unblockUser(user) {
-            UserService.unblockUser(user.id).then(
+        unblockUser({ commit}, unblockedUser) {
+            UserService.unblockUser(unblockedUser.id).then(
                 response => {
-                    console.log(response.data.data);
-                    this.user = response.data.data;
-                    this.followedUsers = response.data.data.followedUsers;
-                    this.blockedUsers = response.data.data.blockedUsers;
-                    this.chatUsers = response.data.data.chats;
+                    commit('setUser', response.data.data);
                 },
                 error => {
-                    console.log(error);
                     this.content =
                         (error.response && error.response.data && error.response.data.message) ||
                         error.message ||
@@ -80,17 +74,12 @@ export const user = {
                 }
             );
         },
-        deleteChatUser(user){
-            UserService.deleteUserChat(user.id).then(
+        deleteChatUser({ commit}, deletedChatUser){
+            UserService.deleteUserChat(deletedChatUser.id).then(
                 response => {
-                    console.log(response.data.data);
-                    this.user = response.data.data;
-                    this.followedUsers = response.data.data.followedUsers;
-                    this.blockedUsers = response.data.data.blockedUsers;
-                    this.chatUsers = response.data.data.chats;
+                    commit('setUser', response.data.data);
                 },
                 error => {
-                    console.log(error);
                     this.content =
                         (error.response && error.response.data && error.response.data.message) ||
                         error.message ||
@@ -98,5 +87,10 @@ export const user = {
                 }
             );
         },
+    },
+    mutations: {
+        setUser(state, resUser) {
+            state.user = resUser;
+        }
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <div @click="openChatlist()" class="clearfix">
+    <div @click="openChat(followedUser)" class="clearfix">
         <img :src="followedUser.image" alt="avatar">
         <div class="about">
             <div class="name">{{ followedUser.username }}</div>
@@ -27,8 +27,9 @@ export default {
         },
     },
     methods: {
-        openChatlist(chatUser) {
-            this.$store.dispatch('chat/openChatlist', chatUser);
+        openChat(user) {
+            this.$store.dispatch('ui/showChat');
+            this.$store.dispatch('chat/setCompanion', user);
         },
         unfollowUser(user) {
             this.$store.dispatch('user/unfollowUser', user);

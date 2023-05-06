@@ -7,7 +7,7 @@ export const chat = {
     actions: {
         setCompanion({commit}, companion) {
             commit('setCompanion', companion);
-        }
+        },
     },
     mutations: {
         setCompanion(state, companion) {

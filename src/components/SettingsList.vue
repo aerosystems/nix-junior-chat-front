@@ -1,5 +1,5 @@
 <template>
-    <div v-if="showSettings">
+    <div v-if="showSettingsState">
         <ul class="list-unstyled chat-list mt-2 mb-0">
             <li>
                 <div class="name row">
@@ -26,7 +26,7 @@
                 </div>
             </li>
             <li>
-                <div @click="clearSidebar(); toggleShowBlacklist()" class="name row">
+                <div @click="showBlockedUsers()" class="name row">
                     <div class="col-lg-6">Blacklist</div>
                     <div class="col-lg-6 text-right">
                         <font-awesome-icon icon="angle-right"/>
@@ -42,14 +42,13 @@
 
 <script>
 import { mapState } from 'vuex'
+import eventBus from "@/common/EventBus";
 export default {
     name: "SettingsList",
     methods: {
         handleLogout() {
-            this.$store.dispatch('user/logout');
-        },
-        clearSidebar() {
-            this.$store.dispatch('ui/clearSidebar');
+            this.$store.dispatch('auth/logout');
+            eventBus.dispatch('logout');
         },
         showBlockedUsers() {
             this.$store.dispatch('ui/showBlockedUsers');
@@ -57,7 +56,7 @@ export default {
     },
     computed: {
         ...mapState({
-            showSettings: state => state.ui.showSettings,
+            showSettingsState: state => state.ui.showSettings,
         })
     }
 

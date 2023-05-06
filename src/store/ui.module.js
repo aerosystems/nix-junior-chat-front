@@ -9,7 +9,6 @@ export const ui = {
         showChat: false,
         searchInput: '',
         foundUsers: [],
-        chatUser: {}
     },
     actions: {
         clearSidebar({commit}) {
@@ -65,7 +64,6 @@ export const ui = {
         },
         clearChat(state) {
             state.showChat = false;
-            state.chatUser = {};
         },
         openSettings(state) {
             state.showSettings = true;
