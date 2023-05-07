@@ -62,6 +62,7 @@ export default {
         },
         clearChat() {
             this.$store.dispatch('ui/clearChat');
+            this.$store.dispatch('chat/clearChat');
         },
     },
 

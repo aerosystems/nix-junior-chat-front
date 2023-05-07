@@ -1,9 +1,9 @@
 <template>
     <ul class="list-unstyled chat-list mt-2 mb-0">
-        <li v-for="foundUser in foundUsers" :key="foundUser.id">
+        <li v-for="foundUser in foundUsersState" :key="foundUser.id">
             <search-item :foundUser="foundUser"/>
         </li>
-        <li v-if="foundUsers.length === 0 && searchInput !== ''">
+        <li v-if="foundUsersState.length === 0 && searchInputState !== ''">
             <div class="clearfix">
                 No users found
             </div>
@@ -20,8 +20,8 @@ export default {
     components: {SearchItem},
     computed: {
         ...mapState({
-            searchInput: state => state.ui.searchInput,
-            foundUsers: state => state.ui.foundUsers,
+            searchInputState: state => state.ui.searchInput,
+            foundUsersState: state => state.ui.foundUsers,
         })
     }
 }

@@ -42,13 +42,13 @@
 
 <script>
 import { mapState } from 'vuex'
-import eventBus from "@/common/EventBus";
+import EventBus from "@/common/EventBus";
 export default {
     name: "SettingsList",
     methods: {
         handleLogout() {
             this.$store.dispatch('auth/logout');
-            eventBus.dispatch('logout');
+            EventBus.dispatch('logout');
         },
         showBlockedUsers() {
             this.$store.dispatch('ui/showBlockedUsers');

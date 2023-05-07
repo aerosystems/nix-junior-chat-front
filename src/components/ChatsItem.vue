@@ -18,7 +18,7 @@
 
 <script>
 export default {
-    name: "ChatsListItem",
+    name: "ChatsItem",
     props: {
         chatUser: {
             type: Object,

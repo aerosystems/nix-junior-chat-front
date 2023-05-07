@@ -60,25 +60,6 @@ export default {
         SettingsList,
     },
     mounted() {
-        this.$options.sockets.onmessage = (data) => {
-            let responseObj = {};
-            responseObj = JSON.parse(data.data);
-
-            if (responseObj.content.length > 0) {
-                let date;
-                date = new Date(responseObj.createdAt * 1000);
-                let sender = {};
-                sender.id = responseObj.senderId;
-                sender.image =
-                    this.messages.push({
-                        content: responseObj.content,
-                        sender: responseObj.senderId,
-                        recepiend: responseObj.recepiendId,
-                        date: date,
-                    });
-            }
-            //console.log(responseObj);
-        };
         this.$store.dispatch('user/setUser');
     },
 };

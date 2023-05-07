@@ -1,6 +1,6 @@
 <template>
     <ul class="m-b-0">
-        <li v-for="(message, index) in messages" :key="index" class="clearfix">
+        <li v-for="(message, index) in messagesState" :key="index" class="clearfix">
             <div class="message-data"
                  :class="message.sender.id === userState.id ? 'text-left' : 'text-right'">
                 <img v-if="message.sender.id === userState.id" :src="message.sender.image"
@@ -25,12 +25,8 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.user,
+            messagesState: state => state.chat.messages,
         }),
-    },
-    data() {
-        return {
-            messages: [],
-        }
     },
     methods: {
         formatDate(date) {
@@ -64,6 +60,26 @@ export default {
 
             return `${formattedHours}:${formattedMinutes} ${ampm}, ${displayDate}`;
         },
+    },
+    mounted() {
+        this.$options.sockets.onmessage = (data) => {
+            let responseObj = {};
+            responseObj = JSON.parse(data.data);
+
+            if (responseObj.content.length > 0) {
+                let date;
+                date = new Date(responseObj.createdAt * 1000);
+                let sender = {};
+                sender.id = responseObj.senderId;
+                sender.image = responseObj.image;
+                this.$store.dispatch('chat/pushMessage', {
+                    content: responseObj.content,
+                    sender: responseObj.senderId,
+                    recepiend: responseObj.recepiendId,
+                    date: date,
+                });
+            }
+        };
     },
 
 }

@@ -11,14 +11,14 @@ import EventBus from "./common/EventBus";
 
 export default {
     methods: {
-        logOut() {
+        logout() {
             this.$store.dispatch('auth/logout');
-            this.$router.push('/login');
+            this.$router.push({'name': 'login'});
         }
     },
     mounted() {
         EventBus.on("logout", () => {
-            this.logOut();
+            this.logout();
         });
     },
     beforeUnmount() {

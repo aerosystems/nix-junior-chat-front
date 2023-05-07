@@ -6,14 +6,17 @@ import SignUpPage from "./components/SignUpPage.vue";
 const routes = [
     {
         path: "/",
+        name: "chat",
         component: ChatPage,
     },
     {
         path: "/login",
+        name: "login",
         component: LoginPage,
     },
     {
         path: "/signup",
+        name: "signup",
         component: SignUpPage,
     }
 ];
