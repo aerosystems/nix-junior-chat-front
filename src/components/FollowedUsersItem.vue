@@ -1,5 +1,8 @@
 <template>
-    <div @click="openChat(followedUser)" class="clearfix">
+    <div @click="openChat(followedUser)"
+         @mouseover="showTrashButton[followedUser.id] = true"
+         @mouseleave="showTrashButton[followedUser.id] = false"
+         class="clearfix">
         <img :src="followedUser.image" alt="avatar">
         <div class="about">
             <div class="name">{{ followedUser.username }}</div>
@@ -9,6 +12,7 @@
         </div>
         <div>
             <button @click="unfollowUser(followedUser)"
+                    v-if="showTrashButton[followedUser.id]"
                     class="btn btn-outline-secondary trash">
                 <font-awesome-icon icon="trash"/>
             </button>
@@ -25,6 +29,11 @@ export default {
             type: Object,
             required: true,
         },
+    },
+    data() {
+        return {
+            showTrashButton: [],
+        }
     },
     methods: {
         openChat(user) {

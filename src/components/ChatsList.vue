@@ -1,6 +1,6 @@
 <template>
-    <ul class="list-unstyled chat-list mt-2 mb-0">
-        <li v-for="chatUser in chatUsers" :key="chatUser.id">
+    <ul v-if="showChatListState" class="list-unstyled chat-list mt-2 mb-0">
+        <li v-for="chatUser in chatUsersState" :key="chatUser.id">
             <chats-item :chatUser="chatUser"/>
         </li>
     </ul>
@@ -11,11 +11,12 @@ import ChatsItem from "@/components/ChatsItem.vue";
 import {mapState} from "vuex";
 
 export default {
-    name: "ChatsItem",
+    name: "ChatsList",
     components: {ChatsItem},
     computed: {
         ...mapState({
-            chatUsers: state => state.user.user.chats,
+            chatUsersState: state => state.user.user.chats,
+            showChatListState: state => state.ui.showChatList,
         })
     }
 }

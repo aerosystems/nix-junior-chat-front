@@ -10,7 +10,6 @@ class UserService {
     }
 
     followUser(id) {
-        console.log(id);
         return api.post(`/v1/user/follow/${id}`);
     }
 

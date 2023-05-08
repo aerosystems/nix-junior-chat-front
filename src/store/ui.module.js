@@ -7,6 +7,7 @@ export const ui = {
         showBlockedUsers: false,
         showSettings: false,
         showChat: false,
+        showProfile: false,
         searchInput: '',
         foundUsers: [],
     },
@@ -34,8 +35,10 @@ export const ui = {
             commit('openBlockedUsers');
         },
         showChat({commit}) {
-            commit('resetState');
             commit('openChat');
+        },
+        showProfile({commit}) {
+            commit('openProfile');
         },
         setFoundUsers: ({commit}, users) => {
             commit('setFoundUsers', users);
@@ -52,6 +55,7 @@ export const ui = {
             state.showBlockedUsers = false;
             state.showSettings = false;
             state.showChat = false;
+            state.showProfile = false;
         },
         clearSidebar(state) {
             state.showSearch = false;
@@ -72,7 +76,12 @@ export const ui = {
             state.showChatList = true;
         },
         openChat(state) {
+            state.showProfile = false;
             state.showChat = true;
+        },
+        openProfile(state) {
+            state.showChat = false;
+            state.showProfile = true;
         },
         openFollowedUsers(state) {
             state.showFollowedUsers = true;

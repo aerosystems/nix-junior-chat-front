@@ -2,8 +2,8 @@
     <div v-if="showSettingsState">
         <ul class="list-unstyled chat-list mt-2 mb-0">
             <li>
-                <div class="name row">
-                    <div class="col-lg-6">Username</div>
+                <div @click="showProfile()" class="name row">
+                    <div class="col-lg-6">Profile</div>
                     <div class="col-lg-6 text-right">
                         <font-awesome-icon icon="angle-right"/>
                     </div>
@@ -11,15 +11,7 @@
             </li>
             <li>
                 <div class="name row">
-                    <div class="col-lg-6">Password</div>
-                    <div class="col-lg-6 text-right">
-                        <font-awesome-icon icon="angle-right"/>
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="name row">
-                    <div class="col-lg-6">Image</div>
+                    <div class="col-lg-6">Security</div>
                     <div class="col-lg-6 text-right">
                         <font-awesome-icon icon="angle-right"/>
                     </div>
@@ -53,6 +45,9 @@ export default {
         showBlockedUsers() {
             this.$store.dispatch('ui/showBlockedUsers');
         },
+        showProfile() {
+            this.$store.dispatch('ui/showProfile');
+        }
     },
     computed: {
         ...mapState({

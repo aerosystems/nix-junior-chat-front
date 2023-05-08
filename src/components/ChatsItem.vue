@@ -1,5 +1,8 @@
 <template>
-    <div @click="openChat(chatUser)" class="clearfix">
+    <div @click="openChat(chatUser)"
+         @mouseover="showTrashButton[chatUser.id] = true"
+         @mouseleave="showTrashButton[chatUser.id] = false"
+         class="clearfix">
         <img :src="chatUser.image" alt="avatar">
         <div class="about">
             <div class="name">{{ chatUser.username }}</div>
@@ -9,6 +12,7 @@
         </div>
         <div>
             <button @click="deleteChatUser(chatUser);"
+                    v-if="showTrashButton[chatUser.id]"
                     class="btn btn-outline-secondary trash">
                 <font-awesome-icon icon="trash"/>
             </button>
@@ -25,9 +29,15 @@ export default {
             required: true,
         },
     },
+    data() {
+        return {
+            showTrashButton: [],
+        }
+    },
     methods: {
-        openChat(chatUser) {
-            this.$store.dispatch('ui/openChatlist', chatUser);
+        openChat(user) {
+            this.$store.dispatch('ui/showChat');
+            this.$store.dispatch('chat/setCompanion', user);
         },
         deleteChatUser(chatUser) {
             this.$store.dispatch('user/deleteChatUser', chatUser);

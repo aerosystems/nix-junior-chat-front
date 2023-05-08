@@ -30,6 +30,7 @@
                     <!-- Chat -->
                     <div class="chat">
                         <chat-component/>
+                        <profile-component/>
                     </div>
                 </div>
             </div>
@@ -46,10 +47,12 @@ import NavBar from "@/components/NavBar.vue";
 import SearchInput from "@/components/SearchInput.vue";
 import SearchList from "@/components/SearchList.vue";
 import ChatComponent from "@/components/ChatComponent.vue";
+import ProfileComponent from "@/components/ProfileComponent.vue";
 
 export default {
     name: 'ChatPage',
     components: {
+        ProfileComponent,
         ChatsList,
         ChatComponent,
         SearchInput,
