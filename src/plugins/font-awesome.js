@@ -11,12 +11,11 @@ import {
     faTrash,
     faAngleRight,
     faAngleLeft,
+    faPenToSquare,
+    faPen
 } from "@fortawesome/free-solid-svg-icons";
-import {
-    faPenToSquare
-} from "@fortawesome/free-light-svg-icons";
 
-library.add(faBan, faUserFriends, faSignInAlt, faSignOutAlt, faSignOutAlt, faUserGear, faMessage, faUserPlus, faTrash, faAngleRight, faAngleLeft, faPenToSquare
+library.add(faBan, faUserFriends, faSignInAlt, faSignOutAlt, faSignOutAlt, faUserGear, faMessage, faUserPlus, faTrash, faAngleRight, faAngleLeft, faPenToSquare, faPen
 );
 
 export {FontAwesomeIcon};

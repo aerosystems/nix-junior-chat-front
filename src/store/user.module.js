@@ -87,10 +87,37 @@ export const user = {
                 }
             );
         },
+        updateUsername({ commit}, username){
+            return UserService.updateUsername(username).then(
+                response => {
+                    if (response.status === 200) {
+                        commit('setUsername', username);
+                    }
+                },
+                error => {
+                    throw error;
+                }
+            );
+        },
+        uploadImage({ commit}, image){
+            return UserService.uploadImage(image).then(
+                response => {
+                    if (response.status === 200) {
+                        commit('setUser', response.data.data);
+                    }
+                },
+                error => {
+                    throw error;
+                }
+            );
+        }
     },
     mutations: {
         setUser(state, resUser) {
             state.user = resUser;
+        },
+        setUsername(state, username) {
+            state.user.username = username;
         }
     }
 }

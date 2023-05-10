@@ -28,6 +28,14 @@ class UserService {
     deleteUserChat(id) {
         return api.delete(`/v1/user/chat/${id}`);
     }
+
+    updateUsername(username) {
+        return api.put(`/v1/user/update-username`, {username});
+    }
+
+    uploadImage(image) {
+        return api.post(`/v1/user/upload-image`, image);
+    }
 }
 
 export default new UserService();
