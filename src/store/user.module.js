@@ -87,7 +87,7 @@ export const user = {
                 }
             );
         },
-        updateUsername({ commit}, username){
+        updateUsername({ commit }, username){
             return UserService.updateUsername(username).then(
                 response => {
                     if (response.status === 200) {
@@ -99,12 +99,19 @@ export const user = {
                 }
             );
         },
-        uploadImage({ commit}, image){
-            return UserService.uploadImage(image).then(
+        uploadImage({ commit }, formData){
+            console.log(formData.get());
+            return UserService.uploadImage(formData).then(
                 response => {
                     if (response.status === 200) {
-                        commit('setUser', response.data.data);
-                    }
+                        UserService.getUser().then(
+                            response => {
+                                commit('setUser', response.data.data);
+                            },
+                            error => {
+                                throw error;
+                            }
+                        );}
                 },
                 error => {
                     throw error;

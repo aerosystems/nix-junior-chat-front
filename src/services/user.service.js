@@ -33,8 +33,8 @@ class UserService {
         return api.put(`/v1/user/update-username`, {username});
     }
 
-    uploadImage(image) {
-        return api.post(`/v1/user/upload-image`, image);
+    uploadImage(formData) {
+        return api.post(`/v1/user/upload-image`, formData);
     }
 }
 

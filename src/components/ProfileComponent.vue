@@ -2,19 +2,19 @@
     <div v-if="showProfileState" class="profile-info">
 
         <div class="profile-image">
-            <input type="file"
-                   name="file"
-                   id="image-upload"
-                   ref="profileImageInput"
-                   class="hide"
-                   @change="uploadProfileImage">
-            <label for="image-upload">
-                <img :src="userState.image"
-                     @click="chooseProfileImage"
-                     class="rounded-circle"
-                     alt="avatar"
-                >
-            </label>
+            <form @submit.prevent="uploadImage">
+                <input type="file"
+                       name="file"
+                       class="hide"
+                       id="profile-image-input"
+                       @change="onFileSelected">
+                <label for="profile-image-input">
+                    <img :src="userState.image"
+                         class="rounded-circle"
+                         alt="avatar"
+                    >
+                </label>
+            </form>
         </div>
 
         <div class="profile-username">
@@ -40,42 +40,15 @@
 
 <script>
 import {mapState} from 'vuex'
-import { ref } from 'vue'
 
 export default {
     name: "ProfileComponent",
-    setup() {
-        const profileImageInput = ref(null);
-
-        function chooseProfileImage() {
-            profileImageInput.value.click();
-        }
-
-        async function uploadProfileImage() {
-            const file = profileImageInput.value.files[0];
-            const formData = new FormData();
-            formData.append('image', file);
-            try {
-                await this.$store.dispatch('user/uploadImage', formData);
-            } catch (error) {
-                this.errorMessage = error.response.data.message;
-                setTimeout(() => {
-                    this.errorMessage = '';
-                }, 3000);
-            }
-        }
-
-        return {
-            profileImageInput,
-            chooseProfileImage,
-            uploadProfileImage
-        };
-    },
     data() {
         return {
             username: "",
             showUsernameEditIcon: false,
             errorMessage: "",
+            file: null,
         }
     },
     computed: {
@@ -95,7 +68,30 @@ export default {
                 }, 3000);
             }
         },
+        // вибір файлу для відправки
+        onFileSelected(event) {
+            this.file = event.target.files[0]
+        },
+        // відправка форми на сервер
+        async uploadImage() {
+            const formData = new FormData()
+            formData.append('image', this.file)
+            try {
+                await this.$store.dispatch('user/uploadImage', formData);
+            } catch (error) {
+                console.log(error);
+                // this.errorMessage = error.response.data.message;
+                setTimeout(() => {
+                    this.errorMessage = '';
+                }, 3000);
+            }
+        }
     },
+    watch: {
+        file() {
+            this.uploadImage()
+        }
+    }
 }
 </script>
 

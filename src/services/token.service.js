@@ -1,4 +1,16 @@
+import jwt_decode from "jwt-decode";
 class TokenService {
+    isRefreshTokenExpired() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user?.refreshToken) {
+            const decoded = jwt_decode(user.refreshToken);
+            if (decoded.exp * 1000 < Date.now()) {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
     getLocalRefreshToken() {
         const user = JSON.parse(localStorage.getItem("user"));
         return user?.refreshToken;
