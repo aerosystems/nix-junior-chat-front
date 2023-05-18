@@ -117,7 +117,7 @@ export const user = {
                     throw error;
                 }
             );
-        }
+        },
     },
     mutations: {
         setUser(state, resUser) {

@@ -36,6 +36,10 @@ class UserService {
     uploadImage(formData) {
         return api.post(`/v1/user/upload-image`, formData);
     }
+
+    updatePassword(oldPassword, newPassword) {
+        return api.put(`/v1/user/update-password`, {oldPassword: oldPassword, newPassword: newPassword});
+    }
 }
 
 export default new UserService();

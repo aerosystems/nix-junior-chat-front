@@ -1,37 +1,52 @@
 <template>
     <div v-if="showProfileState" class="profile-info">
-
-        <div class="profile-image">
-            <form @submit.prevent="uploadImage">
-                <input type="file"
-                       name="file"
-                       class="hide"
-                       id="profile-image-input"
-                       @change="onFileSelected">
-                <label for="profile-image-input">
-                    <img :src="userState.image"
-                         class="rounded-circle"
-                         alt="avatar"
-                    >
-                </label>
-            </form>
-        </div>
-
-        <div class="profile-username">
-            <div class="input-wrapper">
-                <input type="text"
-                       class="form-control"
-                       :placeholder="userState.username"
-                       v-model="username"/>
-                <button @click="updateUsername"
-                        class="btn btn-outline-secondary">
-                    <font-awesome-icon icon="pen"/>
-                </button>
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="profile-image">
+                    <form @submit.prevent="uploadImage">
+                        <input type="file"
+                               name="file"
+                               class="hide"
+                               id="profile-image-input"
+                               @change="onFileSelected">
+                        <label for="profile-image-input">
+                            <img :src="userState.image"
+                                 class="rounded-circle"
+                                 alt="avatar"
+                            >
+                        </label>
+                    </form>
+                </div>
             </div>
         </div>
-        <div class="error-message" :class="{'show' : errorMessage}">
-            <div class="input-wrapper">
-                {{ errorMessage }}
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="profile-username">
+                    <div class="input-wrapper">
+                        <input type="text"
+                               class="form-control"
+                               :placeholder="userState.username"
+                               v-model="username"/>
+                        <button @click="updateUsername"
+                                class="btn btn-outline-secondary">
+                            <font-awesome-icon icon="pen"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="error-message" :class="{'show' : errorMessage}">
+                    <div class="input-wrapper">
+                        {{ errorMessage }}
+                    </div>
+                </div>
+                <div class="success-message" :class="{'show' : successMessage}">
+                    <div class="input-wrapper">
+                        {{ successMessage }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -48,6 +63,7 @@ export default {
             username: "",
             showUsernameEditIcon: false,
             errorMessage: "",
+            successMessage: "",
             file: null,
         }
     },
@@ -62,10 +78,7 @@ export default {
             try {
                 await this.$store.dispatch("user/updateUsername", this.username);
             } catch (error) {
-                this.errorMessage = error.response.data.message;
-                setTimeout(() => {
-                    this.errorMessage = '';
-                }, 3000);
+                this.errorResponse(error.response.data.message);
             }
         },
         // вибір файлу для відправки
@@ -80,11 +93,22 @@ export default {
                 await this.$store.dispatch('user/uploadImage', formData);
             } catch (error) {
                 console.log(error);
-                // this.errorMessage = error.response.data.message;
-                setTimeout(() => {
-                    this.errorMessage = '';
-                }, 3000);
+                this.errorResponse(error.response.data.message);
             }
+        },
+        successResponse(message) {
+            this.successMessage = message;
+            setTimeout(() => {
+                this.successMessage = '';
+                this.errorMessage = '';
+            }, 3000);
+        },
+        errorResponse(message) {
+            this.errorMessage = message;
+            setTimeout(() => {
+                this.successMessage = '';
+                this.errorMessage = '';
+            }, 3000);
         }
     },
     watch: {
@@ -108,7 +132,7 @@ export default {
 
 .profile-username {
     font-size: 20px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .profile-username input {

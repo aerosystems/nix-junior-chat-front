@@ -10,7 +10,7 @@
                 </div>
             </li>
             <li>
-                <div class="name row">
+                <div @click="showSecurity()" class="name row">
                     <div class="col-lg-6">Security</div>
                     <div class="col-lg-6 text-right">
                         <font-awesome-icon icon="angle-right"/>
@@ -47,7 +47,10 @@ export default {
         },
         showProfile() {
             this.$store.dispatch('ui/showProfile');
-        }
+        },
+        showSecurity() {
+            this.$store.dispatch('ui/showSecurity');
+        },
     },
     computed: {
         ...mapState({

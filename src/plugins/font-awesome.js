@@ -12,10 +12,32 @@ import {
     faAngleRight,
     faAngleLeft,
     faPenToSquare,
-    faPen
+    faPen,
+    faUserSecret,
+    faLockOpen,
+    faUserLock,
+    faCheck,
+    faArrowLeft,
+    faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faBan, faUserFriends, faSignInAlt, faSignOutAlt, faSignOutAlt, faUserGear, faMessage, faUserPlus, faTrash, faAngleRight, faAngleLeft, faPenToSquare, faPen
-);
-
+library.add(faBan,
+    faUserFriends,
+    faSignInAlt,
+    faSignOutAlt,
+    faSignOutAlt,
+    faUserGear,
+    faMessage,
+    faUserPlus,
+    faTrash,
+    faAngleRight,
+    faAngleLeft,
+    faPenToSquare,
+    faPen,
+    faUserSecret,
+    faLockOpen,
+    faUserLock,
+    faCheck,
+    faArrowLeft,
+    faPaperPlane);
 export {FontAwesomeIcon};
