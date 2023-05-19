@@ -377,4 +377,8 @@ body {
         overflow-x: auto
     }
 }
+
+.not-react {
+    pointer-events: none;
+}
 </style>

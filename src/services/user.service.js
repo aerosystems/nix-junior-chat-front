@@ -34,7 +34,12 @@ class UserService {
     }
 
     uploadImage(formData) {
-        return api.post(`/v1/user/upload-image`, formData);
+        return api.post(`/v1/user/upload-image`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        );
     }
 
     updatePassword(oldPassword, newPassword) {

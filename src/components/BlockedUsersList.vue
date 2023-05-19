@@ -8,6 +8,9 @@
                 <div class="col-lg-6 text-right">Back</div>
             </div>
         </li>
+        <li v-if="blockedUsers.length === 0" class="clearfix not-react">
+           Blacklist in empty
+        </li>
         <li v-for="blockedUser in blockedUsers" :key="blockedUser.id">
             <blocked-users-item :blockedUser="blockedUser"/>
         </li>

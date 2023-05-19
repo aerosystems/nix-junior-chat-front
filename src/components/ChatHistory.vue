@@ -6,7 +6,7 @@
                 <img v-if="message.sender.id === userState.id" :src="message.sender.image"
                      alt="avatar">
                 <span class="message-data-time">{{ formattedDate(message.date) }}</span>
-                <img v-if="message.sender.id !== userState.id" :src="message.sender.image"
+                <img v-if="message.sender.id !== userState.id" :src="chatState.companion.image"
                      alt="avatar">
             </div>
             <div class="message"
@@ -26,6 +26,7 @@ export default {
         ...mapState({
             userState: state => state.user.user,
             messagesState: state => state.chat.messages,
+            chatState: state => state.chat,
         }),
     },
     methods: {

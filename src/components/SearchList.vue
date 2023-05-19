@@ -3,10 +3,8 @@
         <li v-for="foundUser in foundUsersState" :key="foundUser.id">
             <search-item :foundUser="foundUser"/>
         </li>
-        <li v-if="foundUsersState.length === 0 && searchInputState !== ''">
-            <div class="clearfix">
-                No users found
-            </div>
+        <li v-if="foundUsersState.length === 0 && searchInputState !== ''" class="clearfix not-react">
+            Users not found
         </li>
     </ul>
 </template>

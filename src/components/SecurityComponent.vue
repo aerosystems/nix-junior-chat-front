@@ -100,7 +100,6 @@ export default {
                         this.errorResponse(response.data.message);
                     }
                     this.successResponse(response.data.message);
-
                 },
                 error => {
                     this.errorResponse(error.response.data.message);
@@ -115,6 +114,9 @@ export default {
                 this.oldPassword = "";
                 this.newPassword = "";
                 this.retypeNewPassword = "";
+                this.showOldPassword = true;
+                this.showNewPassword = false;
+                this.showRetypeNewPassword = false;
             }, 3000);
         },
         errorResponse(message) {

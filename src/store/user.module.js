@@ -1,12 +1,13 @@
 import UserService from '@/services/user.service';
 import EventBus from "@/common/EventBus";
+
 export const user = {
     namespaced: true,
     state: {
         user: {}
     },
     actions: {
-        setUser({ commit }) {
+        setUser({commit}) {
             UserService.getUser().then(
                 response => {
                     commit('setUser', response.data.data);
@@ -22,7 +23,7 @@ export const user = {
                 }
             );
         },
-        followUser({ commit }, followedUser) {
+        followUser({commit}, followedUser) {
             UserService.followUser(followedUser.id).then(
                 response => {
                     commit('setUser', response.data.data);
@@ -35,7 +36,7 @@ export const user = {
                 }
             );
         },
-        unfollowUser({ commit}, unfollowedUser) {
+        unfollowUser({commit}, unfollowedUser) {
             UserService.unfollowUser(unfollowedUser.id).then(
                 response => {
                     commit('setUser', response.data.data);
@@ -48,7 +49,7 @@ export const user = {
                 }
             );
         },
-        blockUser({ commit}, blockedUser) {
+        blockUser({commit}, blockedUser) {
             UserService.blockUser(blockedUser.id).then(
                 response => {
                     commit('setUser', response.data.data);
@@ -61,7 +62,7 @@ export const user = {
                 }
             );
         },
-        unblockUser({ commit}, unblockedUser) {
+        unblockUser({commit}, unblockedUser) {
             UserService.unblockUser(unblockedUser.id).then(
                 response => {
                     commit('setUser', response.data.data);
@@ -74,7 +75,7 @@ export const user = {
                 }
             );
         },
-        deleteChatUser({ commit}, deletedChatUser){
+        deleteChatUser({commit}, deletedChatUser) {
             UserService.deleteUserChat(deletedChatUser.id).then(
                 response => {
                     commit('setUser', response.data.data);
@@ -87,7 +88,7 @@ export const user = {
                 }
             );
         },
-        updateUsername({ commit }, username){
+        updateUsername({commit}, username) {
             return UserService.updateUsername(username).then(
                 response => {
                     if (response.status === 200) {
@@ -99,8 +100,8 @@ export const user = {
                 }
             );
         },
-        uploadImage({ commit }, formData){
-            console.log(formData.get());
+        uploadImage({commit}, formData) {
+            console.log(formData.get('image'));
             return UserService.uploadImage(formData).then(
                 response => {
                     if (response.status === 200) {
@@ -111,7 +112,10 @@ export const user = {
                             error => {
                                 throw error;
                             }
-                        );}
+                        );
+                    } else {
+                        throw response.data.message;
+                    }
                 },
                 error => {
                     throw error;

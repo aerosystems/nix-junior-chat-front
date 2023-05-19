@@ -77,6 +77,7 @@ export default {
         async updateUsername() {
             try {
                 await this.$store.dispatch("user/updateUsername", this.username);
+                this.successResponse("Username updated successfully");
             } catch (error) {
                 this.errorResponse(error.response.data.message);
             }
@@ -91,9 +92,9 @@ export default {
             formData.append('image', this.file)
             try {
                 await this.$store.dispatch('user/uploadImage', formData);
+                this.successResponse("Image updated successfully");
             } catch (error) {
-                console.log(error);
-                this.errorResponse(error.response.data.message);
+                this.errorResponse(error);
             }
         },
         successResponse(message) {
@@ -146,17 +147,6 @@ export default {
     align-items: center;
 }
 
-.error-message {
-    color: rgba(255, 0, 0, 0.65);
-    margin-top: 10px;
-    opacity: 0; /* початкова прозорість */
-    transition: opacity 1s ease-in-out; /* плавна анімація зміни прозорості */
-}
-
-.error-message.show {
-    opacity: 1; /* повна прозорість при показі повідомлення про помилку */
-}
-
 .profile-image {
     position: relative; /* встановлюємо позицію relative для контейнера зображення */
     display: inline-block; /* встановлюємо властивість inline-block для контейнера зображення */
@@ -188,6 +178,35 @@ export default {
 
 .hide {
     display: none;
+}
+
+.input-wrapper {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-message {
+    color: rgba(255, 0, 0, 0.65);
+    margin-top: 10px;
+    opacity: 0; /* початкова прозорість */
+    transition: opacity 1s ease-in-out; /* плавна анімація зміни прозорості */
+}
+
+.error-message.show {
+    opacity: 1; /* повна прозорість при показі повідомлення про помилку */
+}
+
+.success-message {
+    color: rgb(72, 165, 46);
+    margin-top: 10px;
+    opacity: 0; /* початкова прозорість */
+    transition: opacity 1s ease-in-out; /* плавна анімація зміни прозорості */
+}
+
+.success-message.show {
+    opacity: 1; /* повна прозорість при показі повідомлення про помилку */
 }
 
 </style>
