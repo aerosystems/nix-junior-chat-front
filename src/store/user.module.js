@@ -4,7 +4,10 @@ import EventBus from "@/common/EventBus";
 export const user = {
     namespaced: true,
     state: {
-        user: {}
+        user: {},
+        blockedUsers: [],
+        followedUsers: [],
+        chats: [],
     },
     actions: {
         setUser({commit}) {
@@ -126,6 +129,15 @@ export const user = {
     mutations: {
         setUser(state, resUser) {
             state.user = resUser;
+            if (resUser.blockedUsers !== undefined) {
+                state.blockedUsers = resUser.blockedUsers;
+            }
+            if (resUser.followedUsers !== undefined) {
+                state.followedUsers = resUser.followedUsers;
+            }
+            if (resUser.chats !== undefined) {
+                state.chats = resUser.chats;
+            }
         },
         setUsername(state, username) {
             state.user.username = username;

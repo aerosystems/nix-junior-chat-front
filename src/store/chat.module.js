@@ -1,7 +1,9 @@
+import ChatService from '@/services/chat.service';
 export const chat = {
     namespaced: true,
     state: {
         messages: [],
+        historyMessages: [],
         companion: {},
     },
     actions: {
@@ -13,6 +15,9 @@ export const chat = {
         },
         pushMessage({commit}, {content, sender, recepiend}) {
             commit('pushMessage', {content, sender, recepiend});
+        },
+        getHistoryMessages({commit}, {senderId, recipientId}) {
+            commit('getHistoryMessages', {senderId, recipientId});
         }
     },
     mutations: {
@@ -23,13 +28,28 @@ export const chat = {
             state.messages = [];
             state.companion = {};
         },
-        pushMessage(state, {content, sender, recepiend}) {
+        pushMessage(state, {content, senderId, recepiendId}) {
+            const currentDate = new Date();
+            const unixTimestamp = currentDate.getTime() / 1000;
             state.messages.push({
                 content: content,
-                sender: sender,
-                recepiend: recepiend,
-                date: new Date()
+                senderId: senderId,
+                recepiendId: recepiendId,
+                createdAt: unixTimestamp,
             });
+        },
+        getHistoryMessages(state, {senderId, recipientId}) {
+            ChatService.getMessages(senderId, recipientId).then(
+                response => {
+                    state.historyMessages = response.data.data;
+                },
+                error => {
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            )
         }
     }
 }

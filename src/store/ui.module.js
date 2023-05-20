@@ -81,6 +81,7 @@ export const ui = {
             state.showChatList = true;
         },
         openChat(state) {
+            state.showSecurity = false;
             state.showProfile = false;
             state.showChat = true;
         },

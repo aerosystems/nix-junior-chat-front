@@ -5,7 +5,7 @@
                  :class="message.sender.id === userState.id ? 'text-left' : 'text-right'">
                 <img v-if="message.sender.id === userState.id" :src="message.sender.image"
                      alt="avatar">
-                <span class="message-data-time">{{ formattedDate(message.date) }}</span>
+                <span class="message-data-time">{{ formattedDate(message.createdAt) }}</span>
                 <img v-if="message.sender.id !== userState.id" :src="chatState.companion.image"
                      alt="avatar">
             </div>
@@ -36,7 +36,8 @@ export default {
             const day = date.getDate();
             return `${year}-${month}-${day}`;
         },
-        formattedDate(date) {
+        formattedDate(unixtime) {
+            const date = new Date(unixtime * 1000);
             const now = new Date();
             const yesterday = new Date(now);
             yesterday.setDate(now.getDate() - 1);
@@ -68,19 +69,21 @@ export default {
             responseObj = JSON.parse(data.data);
 
             if (responseObj.content.length > 0) {
-                let date;
-                date = new Date(responseObj.createdAt * 1000);
                 let sender = {};
                 sender.id = responseObj.senderId;
                 sender.image = responseObj.image;
                 this.$store.dispatch('chat/pushMessage', {
                     content: responseObj.content,
-                    sender: responseObj.senderId,
-                    recepiend: responseObj.recepiendId,
-                    date: date,
+                    senderId: responseObj.senderId,
+                    recepiendId: responseObj.recepiendId,
+                    createdAt: responseObj.createdAt,
                 });
             }
         };
+        this.$store.dispatch('chat/getHistoryMessages', {
+            senderId: this.userState.id,
+            recipientId: this.chatState.companion.id,
+        });
     },
 
 }

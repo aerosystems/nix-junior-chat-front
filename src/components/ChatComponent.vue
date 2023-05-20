@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showChatState && chatUserState !== {}">
+  <div v-if="showChatState && companionState !== {}">
       <!-- Chat Header -->
       <div class="chat-header clearfix">
           <chat-header />
@@ -27,7 +27,7 @@ export default {
     computed: {
         ...mapState({
             showChatState: state => state.ui.showChat,
-            chatUserState: state => state.ui.chatUser,
+            companionState: state => state.chat.companion,
         })
     }
 }

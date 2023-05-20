@@ -32,15 +32,17 @@ export default {
     },
     methods: {
         pushMessage(content, sender, recepiend) {
+            let senderId = sender.id;
+            let recepiendId = recepiend.id;
             if (content.length > 0) {
                 this.$store.dispatch("chat/pushMessage", {
                     content: content,
-                    sender: sender,
-                    recipient: recepiend,
+                    senderId: senderId,
+                    recipientId: recepiendId,
                 });
                 this.$socket.sendObj({
                     "content": content,
-                    "recipientId": recepiend.id
+                    "recipientId": recepiendId
                 });
                 this.messageText = "";
             }
