@@ -1,20 +1,22 @@
 <template>
-    <ul class="m-b-0">
-        <li v-for="(message, index) in messagesState" :key="index" class="clearfix">
-            <div class="message-data"
-                 :class="message.sender.id === userState.id ? 'text-left' : 'text-right'">
-                <img v-if="message.sender.id === userState.id" :src="message.sender.image"
-                     alt="avatar">
-                <span class="message-data-time">{{ formattedDate(message.createdAt) }}</span>
-                <img v-if="message.sender.id !== userState.id" :src="chatState.companion.image"
-                     alt="avatar">
-            </div>
-            <div class="message"
-                 :class="message.sender.id === userState.id ? 'my-message float-left' : 'other-message float-right'">
-                {{ message.content }}
-            </div>
-        </li>
-    </ul>
+    <div ref="chathistory" class="chat-history">
+        <ul class="m-b-0">
+            <li v-for="(message, index) in messagesState" :key="index" class="clearfix">
+                <div class="message-data"
+                     :class="message.senderId === userState.id ? 'text-left' : 'text-right'">
+                    <img v-if="message.senderId === userState.id" :src="message.sender.image"
+                         alt="avatar">
+                    <span class="message-data-time">{{ formattedDate(message.createdAt) }}</span>
+                    <img v-if="message.senderId !== userState.id" :src="chatState.companion.image"
+                         alt="avatar">
+                </div>
+                <div class="message"
+                     :class="message.senderId === userState.id ? 'my-message float-left' : 'other-message float-right'">
+                    {{ message.content }}
+                </div>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script>
@@ -28,6 +30,16 @@ export default {
             messagesState: state => state.chat.messages,
             chatState: state => state.chat,
         }),
+    },
+    watch: {
+        messagesState: {
+            handler() {
+                this.$nextTick(() => {
+                    this.scrollToBottom();
+                });
+            },
+            deep: true
+        }
     },
     methods: {
         formatDate(date) {
@@ -62,28 +74,26 @@ export default {
 
             return `${formattedHours}:${formattedMinutes} ${ampm}, ${displayDate}`;
         },
+        scrollToBottom() {
+            const chatHistory = this.$refs.chathistory;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
     },
     mounted() {
+        this.scrollToBottom();
         this.$options.sockets.onmessage = (data) => {
             let responseObj = {};
             responseObj = JSON.parse(data.data);
 
             if (responseObj.content.length > 0) {
-                let sender = {};
-                sender.id = responseObj.senderId;
-                sender.image = responseObj.image;
                 this.$store.dispatch('chat/pushMessage', {
                     content: responseObj.content,
-                    senderId: responseObj.senderId,
-                    recepiendId: responseObj.recepiendId,
+                    sender: responseObj.sender,
+                    recipientId: responseObj.recipientId,
                     createdAt: responseObj.createdAt,
                 });
             }
         };
-        this.$store.dispatch('chat/getHistoryMessages', {
-            senderId: this.userState.id,
-            recipientId: this.chatState.companion.id,
-        });
     },
 
 }

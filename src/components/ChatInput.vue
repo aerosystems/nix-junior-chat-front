@@ -31,18 +31,16 @@ export default {
         }
     },
     methods: {
-        pushMessage(content, sender, recepiend) {
-            let senderId = sender.id;
-            let recepiendId = recepiend.id;
+        pushMessage(content, sender, recipient) {
             if (content.length > 0) {
                 this.$store.dispatch("chat/pushMessage", {
                     content: content,
-                    senderId: senderId,
-                    recipientId: recepiendId,
+                    sender: sender,
+                    recipientId: recipient.id,
                 });
                 this.$socket.sendObj({
                     "content": content,
-                    "recipientId": recepiendId
+                    "recipientId": recipient.id
                 });
                 this.messageText = "";
             }

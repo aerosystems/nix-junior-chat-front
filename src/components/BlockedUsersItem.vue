@@ -3,7 +3,10 @@
         <img :src="blockedUser.image" alt="avatar">
         <div class="about">
             <div class="name">{{ blockedUser.username }}</div>
-            <div class="status">
+            <div v-if="blockedUser.status === 'online'" class="status">
+                <i class="fa fa-circle online"></i> online
+            </div>
+            <div v-else class="status">
                 <i class="fa fa-circle offline"></i> offline
             </div>
         </div>

@@ -3,7 +3,6 @@ export const chat = {
     namespaced: true,
     state: {
         messages: [],
-        historyMessages: [],
         companion: {},
     },
     actions: {
@@ -13,8 +12,8 @@ export const chat = {
         clearChat({commit}) {
             commit('clearChat', {});
         },
-        pushMessage({commit}, {content, sender, recepiend}) {
-            commit('pushMessage', {content, sender, recepiend});
+        pushMessage({commit}, {content, sender, recipientId}) {
+            commit('pushMessage', {content, sender, recipientId});
         },
         getHistoryMessages({commit}, {senderId, recipientId}) {
             commit('getHistoryMessages', {senderId, recipientId});
@@ -28,20 +27,23 @@ export const chat = {
             state.messages = [];
             state.companion = {};
         },
-        pushMessage(state, {content, senderId, recepiendId}) {
+        pushMessage(state, {content, sender, recipientId}) {
             const currentDate = new Date();
             const unixTimestamp = currentDate.getTime() / 1000;
             state.messages.push({
                 content: content,
-                senderId: senderId,
-                recepiendId: recepiendId,
+                sender: sender,
+                senderId: sender.id,
+                recipientId: recipientId,
                 createdAt: unixTimestamp,
             });
         },
         getHistoryMessages(state, {senderId, recipientId}) {
             ChatService.getMessages(senderId, recipientId).then(
                 response => {
-                    state.historyMessages = response.data.data;
+                    state.messages = response.data.data.sort((a, b) => {
+                        return a.id > b.id ? 1 : -1;
+                    });
                 },
                 error => {
                     this.content =

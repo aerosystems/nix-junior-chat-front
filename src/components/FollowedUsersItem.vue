@@ -6,7 +6,10 @@
         <img :src="followedUser.image" alt="avatar">
         <div class="about">
             <div class="name">{{ followedUser.username }}</div>
-            <div class="status">
+            <div v-if="followedUser.status === 'online'" class="status">
+                <i class="fa fa-circle online"></i> online
+            </div>
+            <div v-else class="status">
                 <i class="fa fa-circle offline"></i> offline
             </div>
         </div>
@@ -21,6 +24,7 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
 
 export default {
     name: "FollowedUsersItem",
@@ -39,10 +43,19 @@ export default {
         openChat(user) {
             this.$store.dispatch('ui/showChat');
             this.$store.dispatch('chat/setCompanion', user);
+            this.$store.dispatch('chat/getHistoryMessages', {
+                senderId: this.userState.id,
+                recipientId: user.id,
+            });
         },
         unfollowUser(user) {
             this.$store.dispatch('user/unfollowUser', user);
         },
+    },
+    computed: {
+        ...mapState({
+            userState: state => state.user.user,
+        }),
     },
 }
 </script>
