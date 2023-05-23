@@ -45,7 +45,7 @@ import {Form, Field, ErrorMessage} from "vee-validate";
 import * as yup from "yup";
 
 export default {
-    name: "LoginForm",
+    name: "LoginPage",
     components: {
         Form,
         Field,
@@ -70,7 +70,7 @@ export default {
     },
     created() {
         if (this.loggedIn) {
-            this.$router.push("/");
+            this.$router.push({name: "chat"});
         }
     },
     methods: {
@@ -79,7 +79,7 @@ export default {
 
             this.$store.dispatch("auth/login", user).then(
                 () => {
-                    this.$router.push("/");
+                    this.$router.push({name: "chat"});
                 },
                 (error) => {
                     this.loading = false;

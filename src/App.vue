@@ -10,20 +10,15 @@
 import EventBus from "./common/EventBus";
 
 export default {
-    computed: {
-        currentUser() {
-            return this.$store.state.auth.user;
-        }
-    },
     methods: {
-        logOut() {
+        logout() {
             this.$store.dispatch('auth/logout');
-            this.$router.push('/login');
+            this.$router.push({'name': 'login'});
         }
     },
     mounted() {
         EventBus.on("logout", () => {
-            this.logOut();
+            this.logout();
         });
     },
     beforeUnmount() {

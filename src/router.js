@@ -1,20 +1,23 @@
 import {createWebHistory, createRouter} from "vue-router";
 import ChatPage from "./components/ChatPage.vue";
-import LoginForm from "./components/LoginForm.vue";
-import SignUpForm from "./components/SignUpForm.vue";
+import LoginPage from "./components/LoginPage.vue";
+import SignUpPage from "./components/SignUpPage.vue";
 
 const routes = [
     {
         path: "/",
+        name: "chat",
         component: ChatPage,
     },
     {
         path: "/login",
-        component: LoginForm,
+        name: "login",
+        component: LoginPage,
     },
     {
         path: "/signup",
-        component: SignUpForm,
+        name: "signup",
+        component: SignUpPage,
     }
 ];
 
