@@ -89,7 +89,7 @@ export default {
                 this.$store.dispatch('chat/pushMessage', {
                     content: responseObj.content,
                     sender: responseObj.sender,
-                    recipientId: responseObj.recipientId,
+                    chatId: responseObj.chatId,
                     createdAt: responseObj.createdAt,
                 });
             }

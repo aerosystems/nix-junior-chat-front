@@ -1,7 +1,7 @@
 <template>
     <ul v-if="showChatListState" class="list-unstyled chat-list mt-2 mb-0">
-        <li v-for="chatUser in chatUsersState" :key="chatUser.id">
-            <chats-item :chatUser="chatUser"/>
+        <li v-for="chat in chatsState" :key="chat.id">
+            <chats-item :chat="chat" :user="userState"/>
         </li>
     </ul>
 </template>
@@ -15,7 +15,8 @@ export default {
     components: {ChatsItem},
     computed: {
         ...mapState({
-            chatUsersState: state => state.user.user.chats,
+            chatsState: state => state.user.user.chats,
+            userState: state => state.user.user,
             showChatListState: state => state.ui.showChatList,
         })
     }

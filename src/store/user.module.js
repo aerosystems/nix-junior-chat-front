@@ -78,19 +78,6 @@ export const user = {
                 }
             );
         },
-        deleteChatUser({commit}, deletedChatUser) {
-            UserService.deleteUserChat(deletedChatUser.id).then(
-                response => {
-                    commit('setUser', response.data.data);
-                },
-                error => {
-                    this.content =
-                        (error.response && error.response.data && error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-                }
-            );
-        },
         updateUsername({commit}, username) {
             return UserService.updateUsername(username).then(
                 response => {

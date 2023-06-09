@@ -15,6 +15,7 @@
 
 <script>
 import {mapState} from "vuex";
+import ChatService from "@/services/chat.service";
 export default {
     name: "SearchItem",
     props: {
@@ -25,12 +26,35 @@ export default {
     },
     methods: {
         openChat(foundUser) {
-            this.$store.dispatch('chat/setCompanion', foundUser);
             this.$store.dispatch('ui/showChat');
-            this.$store.dispatch('chat/getHistoryMessages', {
-                senderId: this.userState.id,
-                recipientId: foundUser.id,
-            });
+            this.$store.dispatch('chat/setCompanion', foundUser);
+            ChatService.getChatId(foundUser.id).then(
+                response => {
+                    this.$store.dispatch('chat/setChatId', response.data.data.id);
+                    this.$store.dispatch('chat/getHistoryMessages', response.data.data.id);
+                },
+                error => {
+                    if(error.response.status === 404) {
+                        ChatService.createChat(foundUser.id).then(
+                            response => {
+                                this.$store.dispatch('chat/setChatId', response.data.data.id);
+                                this.$store.dispatch('chat/getHistoryMessages', response.data.data.id);
+                            },
+                            error => {
+                                this.content =
+                                    (error.response && error.response.data && error.response.data.message) ||
+                                    error.message ||
+                                    error.toString();
+                            }
+                        );
+                    }
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
+
         }
     },
     computed: {

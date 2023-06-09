@@ -25,6 +25,7 @@
 
 <script>
 import {mapState} from "vuex";
+import ChatService from "@/services/chat.service";
 
 export default {
     name: "FollowedUsersItem",
@@ -43,10 +44,32 @@ export default {
         openChat(user) {
             this.$store.dispatch('ui/showChat');
             this.$store.dispatch('chat/setCompanion', user);
-            this.$store.dispatch('chat/getHistoryMessages', {
-                senderId: this.userState.id,
-                recipientId: user.id,
-            });
+            ChatService.getChatId(user.id).then(
+                response => {
+                    this.$store.dispatch('chat/setChatId', response.data.data.id);
+                    this.$store.dispatch('chat/getHistoryMessages', response.data.data.id);
+                },
+                error => {
+                    if(error.response.status === 404) {
+                        ChatService.createChat(user.id).then(
+                            response => {
+                                this.$store.dispatch('chat/setChatId', response.data.data.id);
+                                this.$store.dispatch('chat/getHistoryMessages', response.data.data.id);
+                            },
+                            error => {
+                                this.content =
+                                    (error.response && error.response.data && error.response.data.message) ||
+                                    error.message ||
+                                    error.toString();
+                            }
+                        );
+                    }
+                    this.content =
+                        (error.response && error.response.data && error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
         },
         unfollowUser(user) {
             this.$store.dispatch('user/unfollowUser', user);
@@ -55,6 +78,7 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.user,
+            chatIdState: state => state.chat.chatId,
         }),
     },
 }

@@ -1,12 +1,12 @@
 <template>
     <div class="input-group mb-0">
         <div class="input-group-prepend">
-        <span @click="pushMessage(messageText, userState, companionState)"
+        <span @click="pushMessage(messageText, userState, chatIdState)"
               class="input-group-text"><i class="fa fa-send"></i></span>
         </div>
         <input
                 v-model="messageText"
-                @keydown.enter="pushMessage(messageText, userState, companionState)"
+                @keydown.enter="pushMessage(messageText, userState, chatIdState)"
                 type="text"
                 class="form-control"
                 placeholder="Enter text here..."
@@ -22,7 +22,7 @@ export default {
     computed: {
         ...mapState({
             userState: state => state.user.user,
-            companionState: state => state.chat.companion,
+            chatIdState: state => state.chat.chatId,
         }),
     },
     data() {
@@ -31,16 +31,16 @@ export default {
         }
     },
     methods: {
-        pushMessage(content, sender, recipient) {
+        pushMessage(content, sender, chatId) {
             if (content.length > 0) {
                 this.$store.dispatch("chat/pushMessage", {
                     content: content,
                     sender: sender,
-                    recipientId: recipient.id,
+                    chatId: chatId,
                 });
                 this.$socket.sendObj({
                     "content": content,
-                    "recipientId": recipient.id
+                    "chatId": chatId
                 });
                 this.messageText = "";
             }
