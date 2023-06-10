@@ -1,24 +1,14 @@
 <template>
-    <div @click="openChat(followedUser)"
-         @mouseover="showTrashButton[followedUser.id] = true"
-         @mouseleave="showTrashButton[followedUser.id] = false"
-         class="clearfix">
-        <img :src="followedUser.image" alt="avatar">
+    <div @click="openChat(foundUser)" class="clearfix">
+        <img :src="foundUser.image" alt="avatar">
         <div class="about">
-            <div class="name">{{ followedUser.username }}</div>
-            <div v-if="followedUser.status === 'online'" class="status">
+            <div class="name">{{ foundUser.username }}</div>
+            <div v-if="foundUser.isOnline === true" class="status">
                 <i class="fa fa-circle online"></i> online
             </div>
             <div v-else class="status">
                 <i class="fa fa-circle offline"></i> offline
             </div>
-        </div>
-        <div>
-            <button @click="unfollowUser(followedUser)"
-                    v-if="showTrashButton[followedUser.id]"
-                    class="btn btn-outline-secondary trash">
-                <font-awesome-icon icon="trash"/>
-            </button>
         </div>
     </div>
 </template>
@@ -26,32 +16,26 @@
 <script>
 import {mapState} from "vuex";
 import ChatService from "@/services/chat.service";
-
 export default {
-    name: "FollowedUsersItem",
+    name: "SearchItem",
     props: {
-        followedUser: {
+        foundUser: {
             type: Object,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            showTrashButton: [],
+            required: true
         }
     },
     methods: {
-        openChat(user) {
+        openChat(foundUser) {
             this.$store.dispatch('ui/showChat');
-            this.$store.dispatch('chat/setCompanion', user);
-            ChatService.getChatId(user.id).then(
+            this.$store.dispatch('chat/setCompanion', foundUser);
+            ChatService.getChatId(foundUser.id).then(
                 response => {
                     this.$store.dispatch('chat/setChatId', response.data.data.id);
                     this.$store.dispatch('chat/getHistoryMessages', response.data.data.id);
                 },
                 error => {
                     if(error.response.status === 404) {
-                        ChatService.createChat(user.id).then(
+                        ChatService.createChat(foundUser.id).then(
                             response => {
                                 this.$store.dispatch('chat/setChatId', response.data.data.id);
                                 this.$store.dispatch('chat/getHistoryMessages', response.data.data.id);
@@ -70,15 +54,12 @@ export default {
                         error.toString();
                 }
             );
-        },
-        unfollowUser(user) {
-            this.$store.dispatch('user/unfollowUser', user);
-        },
+
+        }
     },
     computed: {
         ...mapState({
             userState: state => state.user.user,
-            chatIdState: state => state.chat.chatId,
         }),
     },
 }

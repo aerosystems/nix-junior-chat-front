@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import SearchItem from "@/components/SearchItem.vue";
+import SearchItem from "@/components/sidebar/SearchItem.vue";
 import {mapState} from 'vuex'
 
 export default {

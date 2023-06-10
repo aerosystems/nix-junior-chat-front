@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import ChatsItem from "@/components/ChatsItem.vue";
+import ChatsItem from "@/components/sidebar/ChatsItem.vue";
 import {mapState} from "vuex";
 
 export default {

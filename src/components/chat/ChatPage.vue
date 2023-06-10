@@ -27,7 +27,7 @@
                     <div class="bar">
                         <nav-bar/>
                     </div>
-                    <!-- Chat -->
+                    <!-- chat -->
                     <div class="chat">
                         <chat-component/>
                         <profile-component/>
@@ -40,16 +40,16 @@
 </template>
 
 <script>
-import ChatsList from "@/components/ChatsList.vue";
-import FollowedUsersList from "@/components/FollowedUsersList.vue";
-import BlockedUsersList from "@/components/BlockedUsersList.vue";
-import SettingsList from "@/components/SettingsList.vue";
-import NavBar from "@/components/NavBar.vue";
-import SearchInput from "@/components/SearchInput.vue";
-import SearchList from "@/components/SearchList.vue";
-import ChatComponent from "@/components/ChatComponent.vue";
-import ProfileComponent from "@/components/ProfileComponent.vue";
-import SecurityComponent from "@/components/SecurityComponent.vue";
+import ChatsList from "@/components/sidebar/ChatsList.vue";
+import FollowedUsersList from "@/components/sidebar/FollowedUsersList.vue";
+import BlockedUsersList from "@/components/sidebar/BlockedUsersList.vue";
+import SettingsList from "@/components/sidebar/SettingsList.vue";
+import NavBar from "@/components/sidebar/NavBar.vue";
+import SearchInput from "@/components/sidebar/SearchInput.vue";
+import SearchList from "@/components/sidebar/SearchList.vue";
+import ChatComponent from "@/components/chat/ChatComponent.vue";
+import ProfileComponent from "@/components/profile/ProfileComponent.vue";
+import SecurityComponent from "@/components/profile/SecurityComponent.vue";
 
 export default {
     name: 'ChatPage',

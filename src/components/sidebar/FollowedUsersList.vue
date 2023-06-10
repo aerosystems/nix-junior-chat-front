@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import FollowedUsersItem from "@/components/FollowedUsersItem.vue";
+import FollowedUsersItem from "@/components/sidebar/FollowedUsersItem.vue";
 import { mapState } from 'vuex'
 export default {
     name: "FollowedUsersList",

@@ -6,7 +6,7 @@
         <img :src="chatUser.image" alt="avatar">
         <div class="about">
             <div class="name">{{ chatUser.username }}</div>
-            <div v-if="chatUserStatus === 'online'" class="status">
+            <div v-if="chatUser.isOnline === true" class="status">
                 <i class="fa fa-circle online"></i> online
             </div>
             <div v-else class="status">
@@ -40,7 +40,6 @@ export default {
     data() {
         return {
             showTrashButton: [],
-            chatUserStatus: 'offline',
             userState: {},
             chatUser: {},
         }
