@@ -7,7 +7,6 @@
                     <!-- Sidebar -->
                     <div id="plist" class="people-list">
                         <!-- Search -->
-                        <search-input/>
                         <search-list/>
 
                         <!-- Chats -->
@@ -45,7 +44,6 @@ import FollowedUsersList from "@/components/sidebar/FollowedUsersList.vue";
 import BlockedUsersList from "@/components/sidebar/BlockedUsersList.vue";
 import SettingsList from "@/components/sidebar/SettingsList.vue";
 import NavBar from "@/components/sidebar/NavBar.vue";
-import SearchInput from "@/components/sidebar/SearchInput.vue";
 import SearchList from "@/components/sidebar/SearchList.vue";
 import ChatComponent from "@/components/chat/ChatComponent.vue";
 import ProfileComponent from "@/components/profile/ProfileComponent.vue";
@@ -58,7 +56,6 @@ export default {
         ProfileComponent,
         ChatsList,
         ChatComponent,
-        SearchInput,
         SearchList,
         NavBar,
         FollowedUsersList,
