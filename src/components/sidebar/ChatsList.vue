@@ -32,15 +32,9 @@ export default {
       this.$store.dispatch('chat/getHistoryMessages', chat.id);
     },
     deleteChatUser(user, chat) {
-        this.$store.dispatch('chat/deleteChat', chat.id);
-        let tmp = [];
-        user.chats.forEach(item => {
-          if (item.id !== chat.id) {
-            tmp = [...tmp, item];
-          }
-        });
-        user.chats = tmp;
-        this.$store.dispatch('user/setUser', user);
+      this.$store.dispatch('chat/deleteChat', chat.id);
+      this.$store.dispatch('user/setUser');
+      this.$store.dispatch('ui/clearChat');
     },
     getUserFromPrivateChat(user, chat) {
       let res = {};

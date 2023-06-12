@@ -117,13 +117,25 @@ export const user = {
         setUser(state, resUser) {
             state.user = resUser;
             if (resUser.blockedUsers !== undefined) {
+                state.user.blockedUsers = resUser.blockedUsers;
                 state.blockedUsers = resUser.blockedUsers;
+            } else {
+                state.user.blockedUsers = [];
+                state.blockedUsers = [];
             }
             if (resUser.followedUsers !== undefined) {
+                state.user.followedUsers = resUser.followedUsers;
                 state.followedUsers = resUser.followedUsers;
+            } else {
+                state.user.followedUsers = [];
+                state.followedUsers = [];
             }
             if (resUser.chats !== undefined) {
+                state.user.chats = resUser.chats;
                 state.chats = resUser.chats;
+            } else {
+                state.user.chats = [];
+                state.chats = [];
             }
         },
         setUsername(state, username) {
