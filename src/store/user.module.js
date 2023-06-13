@@ -13,6 +13,7 @@ export const user = {
         setUser({commit}) {
             UserService.getUser().then(
                 response => {
+                    console.log("###", response.data.data);
                     commit('setUser', response.data.data);
                 },
                 error => {
@@ -78,6 +79,12 @@ export const user = {
                 }
             );
         },
+        dropChat({commit}, chat) {
+            commit('dropChat', chat);
+        },
+        addChat({commit}, chat) {
+            commit('addChat', chat);
+        },
         updateUsername({commit}, username) {
             return UserService.updateUsername(username).then(
                 response => {
@@ -140,6 +147,18 @@ export const user = {
         },
         setUsername(state, username) {
             state.user.username = username;
+        },
+        dropChat(state, chat) {
+            state.user.chats.forEach((item, index) => {
+                if (item.id === chat.id) {
+                    state.user.chats.splice(index, 1);
+                } else {
+                    console.log("chat not found");
+                }
+            });
+        },
+        addChat(state, chat) {
+            state.user.chats.push(chat);
         }
     }
 }

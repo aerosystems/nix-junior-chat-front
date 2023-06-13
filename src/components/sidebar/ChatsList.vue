@@ -1,6 +1,6 @@
 <template>
   <ul v-if="showChatListState" class="list-unstyled chat-list mt-2 mb-0">
-    <li v-for="chat in chatsState" :key="chat.id">
+    <li v-for="chat in chatsState" :key="chat.chatId">
       <user-list-item :user="getUserFromPrivateChat(userState, chat)"
                       :chat="chat"
                       :doOnClickItemBody="openChat"
@@ -26,14 +26,16 @@ export default {
   },
   methods: {
     openChat(user, chat) {
-      this.$store.dispatch('ui/showChat');
       this.$store.dispatch('chat/setCompanion', user);
-      this.$store.dispatch('chat/setChatId', chat.id)
+      this.$store.dispatch('chat/setChatId', chat.id);
       this.$store.dispatch('chat/getHistoryMessages', chat.id);
+      this.$store.dispatch('ui/showChat');
+      this.$store.dispatch('user/addChat', chat);
     },
     deleteChatUser(user, chat) {
       this.$store.dispatch('chat/deleteChat', chat.id);
-      this.$store.dispatch('user/setUser');
+      this.$store.dispatch('user/dropChat', chat);
+      this.$store.dispatch('chat/clearChat');
       this.$store.dispatch('ui/clearChat');
     },
     getUserFromPrivateChat(user, chat) {

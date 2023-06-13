@@ -28,9 +28,9 @@ export default {
     openChat(user, chat) {
       this.$store.dispatch('ui/showChat');
       this.$store.dispatch('chat/setCompanion', user);
-      if (chat != null) {
-        this.$store.dispatch('chat/setChatId', chat.id)
-        this.$store.dispatch('chat/getHistoryMessages', chat.id);
+      if (chat.chatId !== undefined) {
+        this.$store.dispatch('chat/setChatId', chat.chatId)
+        this.$store.dispatch('chat/getHistoryMessages', chat.chatId);
       } else {
         ChatService.getChatId(user.id).then(
             response => {
@@ -61,8 +61,10 @@ export default {
       }
     },
     unfollowUser(user, chat) {
-      this.$store.dispatch('chat/deleteChat', chat.id);
+      this.$store.dispatch('chat/deleteChat', chat.chatId);
+      this.$store.dispatch('chat/clearChat');
       this.$store.dispatch('user/unfollowUser', user);
+      this.$store.dispatch('user/setUser');
     },
   },
 }

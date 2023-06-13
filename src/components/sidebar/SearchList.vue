@@ -11,15 +11,15 @@
     </div>
   </div>
 
-  <ul v-if="showSearchState" class="list-unstyled chat-list mt-2 mb-0">
-    <li v-for="foundUser in foundUsers" :key="foundUser.id">
+  <ul class="list-unstyled chat-list mt-2 mb-0">
+    <li v-for="foundUser in foundUsersState" :key="foundUser.id">
       <user-list-item :user="foundUser"
                       :chat="{}"
                       :doOnClickItemBody="openChat"
                       :doOnClickTrashButton="() => {}"
       />
     </li>
-    <li v-if="foundUsers.length === 0 && searchQuery !== ''" class="clearfix not-react">
+    <li v-if="foundUsersState.length === 0 && searchQuery !== ''" class="clearfix not-react">
       Users not found
     </li>
   </ul>
@@ -35,27 +35,35 @@ export default {
   name: "SearchList",
   data: () => ({
     searchQuery: '',
-    foundUsers: []
   }),
+  watch: {
+    searchQuery(newVal) {
+      this.$store.dispatch('ui/setSearchInput', newVal)
+    },
+    searchInputState(newVal) {
+      this.searchQuery = newVal;
+    },
+  },
   methods: {
     clearSidebar() {
       this.searchQuery = '';
-      this.foundUsers = [];
       this.$store.dispatch('ui/clearSidebar');
     },
     checkInputValue() {
+      this.$store.dispatch('ui/setSearchInput', this.searchQuery);
       if (this.searchQuery.length !== 0) {
         this.searchUser(this.searchQuery);
       } else {
-        this.foundUsers = [];
+        this.$store.dispatch('ui/setFoundUsers', []);
       }
     },
     searchUser(query) {
       UserService.searchUser(query).then(
           response => {
-            this.foundUsers = response.data.data;
+            this.$store.dispatch("ui/setFoundUsers", response.data.data);
           },
           error => {
+            this.$store.dispatch("ui/setFoundUsers", []);
             this.content =
                 (error.response && error.response.data && error.response.data.message) ||
                 error.message ||
@@ -67,21 +75,25 @@ export default {
       this.clearSidebar();
       this.$store.dispatch('ui/showChat');
       this.$store.dispatch('chat/setCompanion', user);
-      if (chat != null) {
-        this.$store.dispatch('chat/setChatId', chat.id)
-        this.$store.dispatch('chat/getHistoryMessages', chat.id);
+      if (chat.chatId !== undefined) {
+        this.$store.dispatch('chat/setChatId', chat.chatId)
+        this.$store.dispatch('chat/getHistoryMessages', chat.chatId);
       } else {
         ChatService.getChatId(user.id).then(
             response => {
+              console.log(response.data.data)
               this.$store.dispatch('chat/setChatId', response.data.data.id);
               this.$store.dispatch('chat/getHistoryMessages', response.data.data.id);
+              this.$store.dispatch('user/setUser')
             },
             error => {
               if (error.response.status === 404) {
                 ChatService.createChat(user.id).then(
                     response => {
+                      console.log(response.data.data)
                       this.$store.dispatch('chat/setChatId', response.data.data.id);
                       this.$store.dispatch('chat/getHistoryMessages', response.data.data.id);
+                      this.$store.dispatch('user/setUser')
                     },
                     error => {
                       this.content =
@@ -102,7 +114,8 @@ export default {
   },
   computed: {
     ...mapState({
-      showSearchState: state => state.ui.showSearch,
+      searchInputState: state => state.ui.searchInput,
+      foundUsersState: state => state.ui.foundUsers,
     }),
   },
   components: {UserListItem},

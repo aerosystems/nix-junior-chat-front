@@ -13,9 +13,9 @@
         <i class="fa fa-circle offline"></i> offline
       </div>
     </div>
-    <div>
-      <button @click="doOnClickTrashButton(user, chat)"
-              v-if="showTrashButton[user.id] && doOnClickTrashButton === (() => {})"
+    <div v-if="doOnClickTrashButton.toString() !== (() => {}).toString()">
+      <button @click.stop="doOnClickTrashButton(user, chat)"
+              v-if="showTrashButton[user.id]"
               class="btn btn-outline-secondary trash">
         <font-awesome-icon icon="trash"/>
       </button>

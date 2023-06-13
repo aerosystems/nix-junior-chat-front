@@ -1,7 +1,6 @@
 export const ui = {
     namespaced: true,
     state: {
-        showSearch: false,
         showChatList: false,
         showFollowedUsers: false,
         showBlockedUsers: false,
@@ -9,6 +8,8 @@ export const ui = {
         showChat: false,
         showProfile: false,
         showSecurity: false,
+        searchInput: '',
+        foundUsers: [],
     },
     actions: {
         clearSidebar({commit}) {
@@ -42,10 +43,15 @@ export const ui = {
         showSecurity: ({commit}) => {
             commit('openSecurity');
         },
+        setSearchInput: ({commit}, input) => {
+            commit('setSearchInput', input);
+        },
+        setFoundUsers: ({commit}, users) => {
+            commit('setFoundUsers', users);
+        },
     },
     mutations: {
         resetState(state) {
-            state.showSearch = false;
             state.showChatList = false;
             state.showFollowedUsers = false;
             state.showBlockedUsers = false;
@@ -55,11 +61,12 @@ export const ui = {
             state.showSecurity = false;
         },
         clearSidebar(state) {
-            state.showSearch = false;
             state.showChatList = false;
             state.showFollowedUsers = false;
             state.showBlockedUsers = false;
             state.showSettings = false;
+            state.searchInput = '';
+            state.foundUsers = [];
         },
         clearChat(state) {
             state.showChat = false;
@@ -90,6 +97,12 @@ export const ui = {
         },
         openBlockedUsers(state) {
             state.showBlockedUsers = true;
+        },
+        setSearchInput(state, input) {
+            state.searchInput = input;
+        },
+        setFoundUsers(state, users) {
+            state.foundUsers = users;
         },
     }
 }

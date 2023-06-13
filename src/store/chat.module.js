@@ -14,7 +14,7 @@ export const chat = {
             commit('setCompanion', companion);
         },
         clearChat({commit}) {
-            commit('clearChat', {});
+            commit('clearChat');
         },
         pushMessage({commit}, {content, sender, chatId}) {
             commit('pushMessage', {content, sender, chatId});
@@ -34,6 +34,7 @@ export const chat = {
             state.companion = companion;
         },
         clearChat(state) {
+            console.log("clearChat");
             state.chatId = 0;
             state.messages = [];
             state.companion = {};
@@ -67,7 +68,7 @@ export const chat = {
         deleteChat(state, chatId) {
             ChatService.deleteChat(chatId).then(
                 response => {
-                    console.log(response.data.data);
+                    console.log("@@@", response.data);
                     state.chatId = 0;
                     state.messages = [];
                     state.companion = {};
