@@ -15,7 +15,7 @@
     </div>
     <div v-if="doOnClickTrashButton.toString() !== (() => {}).toString()">
       <button @click.stop="doOnClickTrashButton(user, chat)"
-              v-if="showTrashButton[user.id]"
+              v-if="showTrashButton[user.id] || forceShowTrashButton"
               class="btn btn-outline-secondary trash">
         <font-awesome-icon icon="trash"/>
       </button>
@@ -42,6 +42,10 @@ export default {
     doOnClickTrashButton: {
       type: Function,
       required: true,
+    },
+    forceShowTrashButton: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

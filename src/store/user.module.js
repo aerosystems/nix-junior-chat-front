@@ -158,7 +158,14 @@ export const user = {
             });
         },
         addChat(state, chat) {
-            state.user.chats.push(chat);
+            state.user.chats.some((item) => {
+                    if (item.id === chat.id) {
+                        console.log("chat already exists");
+                    } else {
+                        state.user.chats.push(chat);
+                    }
+                }
+            );
         }
     }
 }
