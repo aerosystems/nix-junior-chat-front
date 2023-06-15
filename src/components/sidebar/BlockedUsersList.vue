@@ -42,7 +42,7 @@ export default {
   computed: {
     ...mapState({
       showBlockedUsersState: state => state.ui.showBlockedUsers,
-      blockedUsersState: state => state.user.blockedUsers,
+      blockedUsersState: state => state.user.user.blockedUsers,
     })
   }
 }

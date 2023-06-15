@@ -18,6 +18,7 @@ export const websocket = {
             console.log('Socket closed!', event)
         },
         socketOnError(state, event) {
+            this.commit('ui/showModal', {title: 'Error connecting', message: 'Attempting to reconnect...'}, {root: true});
             console.error('Socket error!', event)
         },
         socketOnMessage(state, message) {
@@ -28,6 +29,7 @@ export const websocket = {
             console.log('Socket reconnected!', count)
         },
         socketReconnectError(state, event) {
+            this.commit('ui/showModal', {title: 'Error connecting', message: 'Lost connection to server. Try to refresh the page.'}, {root: true});
             state.socket.reconnectError = true;
             console.log('Socket reconnection error!', event)
         }

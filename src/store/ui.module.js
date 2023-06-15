@@ -8,6 +8,9 @@ export const ui = {
         showChat: false,
         showProfile: false,
         showSecurity: false,
+        showModal: false,
+        modalTitle: '',
+        modalMessage: '',
         searchInput: '',
         foundUsers: [],
     },
@@ -49,6 +52,12 @@ export const ui = {
         setFoundUsers: ({commit}, users) => {
             commit('setFoundUsers', users);
         },
+        showModal: ({commit}, {title, message}) => {
+            commit('showModal', {title, message});
+        },
+        clearModal: ({commit}) => {
+            commit('clearModal');
+        }
     },
     mutations: {
         resetState(state) {
@@ -59,6 +68,11 @@ export const ui = {
             state.showChat = false;
             state.showProfile = false;
             state.showSecurity = false;
+            state.showModal = false;
+            state.modalTitle = '';
+            state.modalMessage = '';
+            state.searchInput = '';
+            state.foundUsers = [];
         },
         clearSidebar(state) {
             state.showChatList = false;
@@ -70,6 +84,11 @@ export const ui = {
         },
         clearChat(state) {
             state.showChat = false;
+        },
+        clearModal(state) {
+            state.modalTitle = '';
+            state.modalMessage = '';
+            state.showModal = false;
         },
         openSettings(state) {
             state.showSettings = true;
@@ -104,5 +123,10 @@ export const ui = {
         setFoundUsers(state, users) {
             state.foundUsers = users;
         },
+        showModal(state, {title, message}) {
+            state.modalTitle = title;
+            state.modalMessage = message;
+            state.showModal = true;
+        }
     }
 }

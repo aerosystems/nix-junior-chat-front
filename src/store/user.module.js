@@ -5,9 +5,6 @@ export const user = {
     namespaced: true,
     state: {
         user: {},
-        blockedUsers: [],
-        followedUsers: [],
-        chats: [],
     },
     actions: {
         setUser({commit}) {
@@ -123,26 +120,23 @@ export const user = {
     mutations: {
         setUser(state, resUser) {
             state.user = resUser;
+            console.log("&&&", resUser);
+            console.log("%%%", resUser.blockedUsers);
+
             if (resUser.blockedUsers !== undefined) {
                 state.user.blockedUsers = resUser.blockedUsers;
-                state.blockedUsers = resUser.blockedUsers;
             } else {
                 state.user.blockedUsers = [];
-                state.blockedUsers = [];
             }
             if (resUser.followedUsers !== undefined) {
                 state.user.followedUsers = resUser.followedUsers;
-                state.followedUsers = resUser.followedUsers;
             } else {
                 state.user.followedUsers = [];
-                state.followedUsers = [];
             }
             if (resUser.chats !== undefined) {
                 state.user.chats = resUser.chats;
-                state.chats = resUser.chats;
             } else {
                 state.user.chats = [];
-                state.chats = [];
             }
         },
         setUsername(state, username) {
@@ -152,20 +146,20 @@ export const user = {
             state.user.chats.forEach((item, index) => {
                 if (item.id === chat.id) {
                     state.user.chats.splice(index, 1);
-                } else {
-                    console.log("chat not found");
                 }
             });
         },
         addChat(state, chat) {
+            let isExist = false;
             state.user.chats.some((item) => {
                     if (item.id === chat.id) {
-                        console.log("chat already exists");
-                    } else {
-                        state.user.chats.push(chat);
+                        isExist = true;
                     }
                 }
             );
+            if (!isExist) {
+                state.user.chats.push(chat);
+            }
         }
     }
 }
