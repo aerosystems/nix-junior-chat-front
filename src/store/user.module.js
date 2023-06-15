@@ -120,9 +120,6 @@ export const user = {
     mutations: {
         setUser(state, resUser) {
             state.user = resUser;
-            console.log("&&&", resUser);
-            console.log("%%%", resUser.blockedUsers);
-
             if (resUser.blockedUsers !== undefined) {
                 state.user.blockedUsers = resUser.blockedUsers;
             } else {

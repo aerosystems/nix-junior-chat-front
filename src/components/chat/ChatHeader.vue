@@ -6,7 +6,7 @@
       </a>
       <div class="chat-about">
         <h6 class="m-b-0">{{ companionState.username }}</h6>
-        <small>Last seen: {{lastSeen}}</small>
+        <small>Last seen: {{userLastSeen}}</small>
       </div>
     </div>
 
@@ -44,17 +44,15 @@ import {mapState} from "vuex";
 
 export default {
   name: "ChatHeader",
-  data() {
-    return {
-      lastSeen: 'just now'
-    }
-  },
   computed: {
     ...mapState({
       companionState: state => state.chat.companion,
       followedUsersState: state => state.user.user.followedUsers,
       blockedUsersState: state => state.user.user.blockedUsers,
     }),
+    userLastSeen() {
+      return this.calculateTimeDifference(this.companionState.updatedAt);
+    },
   },
   methods: {
     followUser(user) {
@@ -69,6 +67,44 @@ export default {
     clearChat() {
       this.$store.dispatch('ui/clearChat');
       this.$store.dispatch('chat/clearChat');
+    },
+    calculateTimeDifference(updatedAt) {
+      // Отримуємо поточний час в мілісекундах
+      const currentTime = new Date().getTime();
+
+      // Парсимо дату lastSeen у форматі ISO 8601
+      const lastSeenTime = new Date(updatedAt).getTime();
+
+      // Обчислюємо різницю між поточним часом та часом lastSeen в мілісекундах
+      const timeDifference = currentTime - lastSeenTime;
+      console.log(timeDifference);
+
+      // Конвертуємо різницю в дні
+      const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+      // Конвертуємо різницю в роки
+      const yearsDifference = Math.floor(daysDifference / 365);
+
+      // Обчислюємо залишкову кількість днів
+      const remainingDays = daysDifference % 365;
+
+      // Обчислюємо залишкову кількість годин
+      const remainingHours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+      // Обчислюємо залишкову кількість хвилин
+      const remainingMinutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+      if (yearsDifference > 0) {
+        return yearsDifference + " years ago";
+      } else if (remainingDays > 0) {
+        return remainingDays + " days ago";
+      } else if (remainingHours > 0) {
+        return remainingHours + " hours ago";
+      } else if (remainingMinutes > 0) {
+        return remainingMinutes + " minutes ago";
+      } else {
+        return "just now";
+      }
     },
   },
 
