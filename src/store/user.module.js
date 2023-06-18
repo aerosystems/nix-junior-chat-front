@@ -10,7 +10,6 @@ export const user = {
         setUser({commit}) {
             UserService.getUser().then(
                 response => {
-                    console.log("###", response.data.data);
                     commit('setUser', response.data.data);
                 },
                 error => {
@@ -95,7 +94,6 @@ export const user = {
             );
         },
         uploadImage({commit}, formData) {
-            console.log(formData.get('image'));
             return UserService.uploadImage(formData).then(
                 response => {
                     if (response.status === 200) {

@@ -81,7 +81,6 @@ export default {
       } else {
         ChatService.getChatId(user.id).then(
             response => {
-              console.log(response.data.data)
               this.$store.dispatch('chat/setChatId', response.data.data.id);
               this.$store.dispatch('chat/getHistoryMessages', response.data.data.id);
               this.$store.dispatch('user/setUser')
@@ -90,7 +89,6 @@ export default {
               if (error.response.status === 404) {
                 ChatService.createChat(user.id).then(
                     response => {
-                      console.log(response.data.data)
                       this.$store.dispatch('chat/setChatId', response.data.data.id);
                       this.$store.dispatch('chat/getHistoryMessages', response.data.data.id);
                       this.$store.dispatch('user/setUser')

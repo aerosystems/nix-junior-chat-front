@@ -70,15 +70,8 @@ export default {
     this.$messaging.getToken({vapidKey: "BDq6PaLGzELQX_sNx-7sWZgXV2LZ-A08L6gwmPweuUnvtt_dRcfFKzHnSxhDIKKd5uX2Uc68qxX67VH6sv4JrDQ"})
     .then((currentToken) => {
       if (currentToken) {
-        console.log('Token: ', currentToken);
-        DeviceService.addDevice(currentToken).then(
-            response => {
-              console.log(response.data);
-            },
-            error => {
-              console.log(error);
-            }
-        );
+        // console.log('Token: ', currentToken);
+        DeviceService.addDevice(currentToken);
       } else {
         console.log('No registration token available. Request permission to generate one.');
       }

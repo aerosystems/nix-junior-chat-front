@@ -33,7 +33,6 @@ export default {
     methods: {
         pushMessage(content, sender, chatId) {
           if (content.length > 0) {
-            console.log(sender);
             this.$socket.sendObj({
               "content": content,
               "chatId": chatId
