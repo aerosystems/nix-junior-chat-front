@@ -77,7 +77,6 @@ export default {
 
       // Обчислюємо різницю між поточним часом та часом lastSeen в мілісекундах
       const timeDifference = currentTime - lastSeenTime;
-      console.log(timeDifference);
 
       // Конвертуємо різницю в дні
       const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));

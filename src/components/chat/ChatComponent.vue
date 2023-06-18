@@ -30,7 +30,7 @@ export default {
             showChatState: state => state.ui.showChat,
             companionState: state => state.chat.companion,
         })
-    }
+    },
 }
 </script>
 

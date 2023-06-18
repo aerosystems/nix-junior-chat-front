@@ -49,6 +49,8 @@ import ProfileComponent from "@/components/profile/ProfileComponent.vue";
 import SecurityComponent from "@/components/profile/SecurityComponent.vue";
 import WebSocketError from "@/components/alerts/WebSocketError.vue";
 
+import DeviceService from "@/services/device.service";
+
 export default {
   name: 'MainPage',
   components: {
@@ -65,6 +67,24 @@ export default {
   },
   mounted() {
     this.$store.dispatch('user/setUser');
+    this.$messaging.getToken({vapidKey: "BDq6PaLGzELQX_sNx-7sWZgXV2LZ-A08L6gwmPweuUnvtt_dRcfFKzHnSxhDIKKd5uX2Uc68qxX67VH6sv4JrDQ"})
+    .then((currentToken) => {
+      if (currentToken) {
+        console.log('Token: ', currentToken);
+        DeviceService.addDevice(currentToken).then(
+            response => {
+              console.log(response.data);
+            },
+            error => {
+              console.log(error);
+            }
+        );
+      } else {
+        console.log('No registration token available. Request permission to generate one.');
+      }
+    }).catch((err) => {
+      console.log('An error occurred while retrieving token. ', err);
+    });
   },
 };
 </script>

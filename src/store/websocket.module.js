@@ -22,7 +22,20 @@ export const websocket = {
             console.error('Socket error!', event)
         },
         socketOnMessage(state, message) {
-            state.socket.message = message;
+            switch (message.type) {
+                case 'text':
+                    state.socket.message = message;
+                    break;
+                case 'system':
+                    // TODO: Implement system messages
+                    break;
+                case 'error':
+                    this.commit('ui/showModal', {title: 'Error', message: message.content}, {root: true});
+                    break;
+                default:
+                    this.commit('ui/showModal', {title: 'Unknown error', message: 'Unknown error occurred'}, {root: true});
+                    break;
+            }
             console.log('Socket message:', message)
         },
         socketReconnect(state, count) {

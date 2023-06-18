@@ -63,6 +63,7 @@ export default {
     unfollowUser(user, chat) {
       this.$store.dispatch('chat/deleteChat', chat.chatId);
       this.$store.dispatch('chat/clearChat');
+      this.$store.dispatch('ui/clearChat');
       this.$store.dispatch('user/unfollowUser', user);
       this.$store.dispatch('user/setUser');
     },

@@ -32,18 +32,19 @@ export default {
     },
     methods: {
         pushMessage(content, sender, chatId) {
-            if (content.length > 0) {
-                this.$store.dispatch("chat/pushMessage", {
-                    content: content,
-                    sender: sender,
-                    chatId: chatId,
-                });
-                this.$socket.sendObj({
-                    "content": content,
-                    "chatId": chatId
-                });
-                this.messageText = "";
-            }
+          if (content.length > 0) {
+            console.log(sender);
+            this.$socket.sendObj({
+              "content": content,
+              "chatId": chatId
+            });
+            this.$store.dispatch("chat/pushMessage", {
+              content: content,
+              sender: sender,
+              chatId: chatId,
+            });
+            this.messageText = "";
+          }
         },
     }
 
