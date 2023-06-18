@@ -9,28 +9,28 @@ class UserService {
         return api.get(`/v1/search?q=${query}`);
     }
 
-    followUser(id) {
-        return api.post(`/v1/user/follow/${id}`);
+    followUser(userId) {
+        return api.post(`/v1/user/${userId}/follow`);
     }
 
-    unfollowUser(id) {
-        return api.delete(`/v1/user/follow/${id}`);
+    unfollowUser(userId) {
+        return api.delete(`/v1/user/${userId}/follow`);
     }
 
-    blockUser(id) {
-        return api.post(`/v1/user/block/${id}`);
+    blockUser(userId) {
+        return api.post(`/v1/user/${userId}/block`);
     }
 
-    unblockUser(id) {
-        return api.delete(`/v1/user/block/${id}`);
-    }
-
-    deleteUserChat(id) {
-        return api.delete(`/v1/user/chat/${id}`);
+    unblockUser(userId) {
+        return api.delete(`/v1/user/${userId}/block`);
     }
 
     updateUsername(username) {
         return api.put(`/v1/user/update-username`, {username});
+    }
+
+    updatePassword(oldPassword, newPassword) {
+        return api.put(`/v1/user/update-password`, {oldPassword: oldPassword, newPassword: newPassword});
     }
 
     uploadImage(formData) {
@@ -40,10 +40,6 @@ class UserService {
             }
         }
         );
-    }
-
-    updatePassword(oldPassword, newPassword) {
-        return api.put(`/v1/user/update-password`, {oldPassword: oldPassword, newPassword: newPassword});
     }
 }
 

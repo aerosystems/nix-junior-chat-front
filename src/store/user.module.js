@@ -5,9 +5,6 @@ export const user = {
     namespaced: true,
     state: {
         user: {},
-        blockedUsers: [],
-        followedUsers: [],
-        chats: [],
     },
     actions: {
         setUser({commit}) {
@@ -78,18 +75,11 @@ export const user = {
                 }
             );
         },
-        deleteChatUser({commit}, deletedChatUser) {
-            UserService.deleteUserChat(deletedChatUser.id).then(
-                response => {
-                    commit('setUser', response.data.data);
-                },
-                error => {
-                    this.content =
-                        (error.response && error.response.data && error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-                }
-            );
+        dropChat({commit}, chat) {
+            commit('dropChat', chat);
+        },
+        addChat({commit}, chat) {
+            commit('addChat', chat);
         },
         updateUsername({commit}, username) {
             return UserService.updateUsername(username).then(
@@ -104,7 +94,6 @@ export const user = {
             );
         },
         uploadImage({commit}, formData) {
-            console.log(formData.get('image'));
             return UserService.uploadImage(formData).then(
                 response => {
                     if (response.status === 200) {
@@ -130,17 +119,42 @@ export const user = {
         setUser(state, resUser) {
             state.user = resUser;
             if (resUser.blockedUsers !== undefined) {
-                state.blockedUsers = resUser.blockedUsers;
+                state.user.blockedUsers = resUser.blockedUsers;
+            } else {
+                state.user.blockedUsers = [];
             }
             if (resUser.followedUsers !== undefined) {
-                state.followedUsers = resUser.followedUsers;
+                state.user.followedUsers = resUser.followedUsers;
+            } else {
+                state.user.followedUsers = [];
             }
             if (resUser.chats !== undefined) {
-                state.chats = resUser.chats;
+                state.user.chats = resUser.chats;
+            } else {
+                state.user.chats = [];
             }
         },
         setUsername(state, username) {
             state.user.username = username;
+        },
+        dropChat(state, chat) {
+            state.user.chats.forEach((item, index) => {
+                if (item.id === chat.id) {
+                    state.user.chats.splice(index, 1);
+                }
+            });
+        },
+        addChat(state, chat) {
+            let isExist = false;
+            state.user.chats.some((item) => {
+                    if (item.id === chat.id) {
+                        isExist = true;
+                    }
+                }
+            );
+            if (!isExist) {
+                state.user.chats.push(chat);
+            }
         }
     }
 }
